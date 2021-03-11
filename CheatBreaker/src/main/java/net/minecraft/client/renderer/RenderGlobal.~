@@ -1,0 +1,2566 @@
+package net.minecraft.client.renderer;
+
+import com.google.common.collect.Maps;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.Callable;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.particle.EntityAuraFX;
+import net.minecraft.client.particle.EntityBlockDustFX;
+import net.minecraft.client.particle.EntityBreakingFX;
+import net.minecraft.client.particle.EntityBubbleFX;
+import net.minecraft.client.particle.EntityCloudFX;
+import net.minecraft.client.particle.EntityCritFX;
+import net.minecraft.client.particle.EntityDiggingFX;
+import net.minecraft.client.particle.EntityDropParticleFX;
+import net.minecraft.client.particle.EntityEnchantmentTableParticleFX;
+import net.minecraft.client.particle.EntityExplodeFX;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntityFireworkSparkFX;
+import net.minecraft.client.particle.EntityFishWakeFX;
+import net.minecraft.client.particle.EntityFlameFX;
+import net.minecraft.client.particle.EntityFootStepFX;
+import net.minecraft.client.particle.EntityHeartFX;
+import net.minecraft.client.particle.EntityHugeExplodeFX;
+import net.minecraft.client.particle.EntityLargeExplodeFX;
+import net.minecraft.client.particle.EntityLavaFX;
+import net.minecraft.client.particle.EntityNoteFX;
+import net.minecraft.client.particle.EntityPortalFX;
+import net.minecraft.client.particle.EntityReddustFX;
+import net.minecraft.client.particle.EntitySmokeFX;
+import net.minecraft.client.particle.EntitySnowShovelFX;
+import net.minecraft.client.particle.EntitySpellParticleFX;
+import net.minecraft.client.particle.EntitySplashFX;
+import net.minecraft.client.particle.EntitySuspendFX;
+import net.minecraft.client.renderer.DestroyBlockProgress;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.OpenGlCapsChecker;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderList;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.util.RenderDistanceSorter;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemRecord;
+import net.minecraft.profiler.Profiler;
+import net.minecraft.src.CompactArrayList;
+import net.minecraft.src.Config;
+import net.minecraft.src.CustomColorizer;
+import net.minecraft.src.CustomSky;
+import net.minecraft.src.DynamicLights;
+import net.minecraft.src.EntitySorterFast;
+import net.minecraft.src.RandomMobs;
+import net.minecraft.src.Reflector;
+import net.minecraft.src.WrDisplayListAllocator;
+import net.minecraft.src.WrUpdates;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ReportedException;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.IWorldAccess;
+import net.minecraft.world.WorldProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.ARBOcclusionQuery;
+import org.lwjgl.opengl.GL11;
+
+public class RenderGlobal implements IWorldAccess {
+
+   private static final Logger field_147599_m = LogManager.getLogger();
+   private static final ResourceLocation field_110927_h = new ResourceLocation("textures/environment/moon_phases.png");
+   private static final ResourceLocation field_110928_i = new ResourceLocation("textures/environment/sun.png");
+   private static final ResourceLocation field_110925_j = new ResourceLocation("textures/environment/clouds.png");
+   private static final ResourceLocation field_110926_k = new ResourceLocation("textures/environment/end_sky.png");
+   public List field_147598_a = new ArrayList();
+   public WorldClient field_72769_h;
+   public final TextureManager field_72770_i;
+   public CompactArrayList field_72767_j = new CompactArrayList(100, 0.8F);
+   private WorldRenderer[] field_72768_k;
+   private WorldRenderer[] field_72765_l;
+   private int field_72766_m;
+   private int field_72763_n;
+   private int field_72764_o;
+   public int field_72778_p;
+   public Minecraft field_72777_q;
+   public RenderBlocks field_147592_B;
+   private IntBuffer field_72775_s;
+   private boolean field_72774_t;
+   private int field_72773_u;
+   private int field_72772_v;
+   private int field_72771_w;
+   private int field_72781_x;
+   private int field_72780_y;
+   private int field_72779_z;
+   private int field_72741_A;
+   private int field_72742_B;
+   private int field_72743_C;
+   private int field_72737_D;
+   public final Map field_72738_E = new HashMap();
+   private final Map field_147593_P = Maps.newHashMap();
+   private IIcon[] field_94141_F;
+   private boolean field_147595_R;
+   private int field_147594_S;
+   private int field_72739_F = -1;
+   private int field_72740_G = 2;
+   private int field_72748_H;
+   private int field_72749_I;
+   private int field_72750_J;
+   IntBuffer field_72761_c = GLAllocation.func_74527_f(64);
+   private int field_72751_K;
+   private int field_72744_L;
+   private int field_72745_M;
+   private int field_72746_N;
+   private int field_72747_O;
+   private int field_72753_P;
+   private int field_72752_Q;
+   private List field_72755_R = new ArrayList();
+   private RenderList[] field_72754_S = new RenderList[]{new RenderList(), new RenderList(), new RenderList(), new RenderList()};
+   double field_72758_d = -9999.0D;
+   double field_72759_e = -9999.0D;
+   double field_72756_f = -9999.0D;
+   double field_147596_f = -9999.0D;
+   double field_147597_g = -9999.0D;
+   double field_147602_h = -9999.0D;
+   int field_147603_i = -999;
+   int field_147600_j = -999;
+   int field_147601_k = -999;
+   int field_72757_g;
+   private static final String __OBFID = "CL_00000954";
+   private IntBuffer glListBuffer = BufferUtils.createIntBuffer(65536);
+   double prevReposX;
+   double prevReposY;
+   double prevReposZ;
+   public Entity renderedEntity;
+   private int glListClouds = -1;
+   private boolean isFancyGlListClouds = false;
+   private int cloudTickCounterGlList = -99999;
+   private double cloudPlayerX = 0.0D;
+   private double cloudPlayerY = 0.0D;
+   private double cloudPlayerZ = 0.0D;
+   private int countSortedWorldRenderers = 0;
+   private int effectivePreloadedChunks = 0;
+   private int vertexResortCounter = 30;
+   public WrDisplayListAllocator displayListAllocator = new WrDisplayListAllocator();
+   public EntityLivingBase renderViewEntity;
+   private int countTileEntitiesRendered;
+   private long lastMovedTime = System.currentTimeMillis();
+   private long lastActionTime = System.currentTimeMillis();
+   private static AxisAlignedBB AABB_INFINITE = AxisAlignedBB.func_72330_a(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+   private static final String __OBFID = "CL_00000954";
+
+   public RenderGlobal(Minecraft par1Minecraft) {
+      this.glListClouds = GLAllocation.func_74526_a(1);
+      this.field_72777_q = par1Minecraft;
+      this.field_72770_i = par1Minecraft.func_110434_K();
+      byte maxChunkDim = 65;
+      byte maxChunkHeight = 16;
+      int countWorldRenderers = maxChunkDim * maxChunkDim * maxChunkHeight;
+      int countStandardRenderLists = countWorldRenderers * 3;
+      this.field_72778_p = GLAllocation.func_74526_a(countStandardRenderLists);
+      this.field_147595_R = false;
+      this.field_147594_S = GLAllocation.func_74526_a(1);
+      this.field_72774_t = OpenGlCapsChecker.func_74371_a();
+      if(this.field_72774_t) {
+         this.field_72761_c.clear();
+         this.field_72775_s = GLAllocation.func_74527_f(maxChunkDim * maxChunkDim * maxChunkHeight);
+         this.field_72775_s.clear();
+         this.field_72775_s.position(0);
+         this.field_72775_s.limit(maxChunkDim * maxChunkDim * maxChunkHeight);
+         ARBOcclusionQuery.glGenQueriesARB(this.field_72775_s);
+      }
+
+      this.field_72772_v = GLAllocation.func_74526_a(3);
+      GL11.glPushMatrix();
+      GL11.glNewList(this.field_72772_v, 4864);
+      this.func_72730_g();
+      GL11.glEndList();
+      GL11.glPopMatrix();
+      Tessellator var4 = Tessellator.field_78398_a;
+      this.field_72771_w = this.field_72772_v + 1;
+      GL11.glNewList(this.field_72771_w, 4864);
+      byte var6 = 64;
+      int var7 = 256 / var6 + 2;
+      float var5 = 16.0F;
+
+      int var8;
+      int var9;
+      for(var8 = -var6 * var7; var8 <= var6 * var7; var8 += var6) {
+         for(var9 = -var6 * var7; var9 <= var6 * var7; var9 += var6) {
+            var4.func_78382_b();
+            var4.func_78377_a((double)(var8 + 0), (double)var5, (double)(var9 + 0));
+            var4.func_78377_a((double)(var8 + var6), (double)var5, (double)(var9 + 0));
+            var4.func_78377_a((double)(var8 + var6), (double)var5, (double)(var9 + var6));
+            var4.func_78377_a((double)(var8 + 0), (double)var5, (double)(var9 + var6));
+            var4.func_78381_a();
+         }
+      }
+
+      GL11.glEndList();
+      this.field_72781_x = this.field_72772_v + 2;
+      GL11.glNewList(this.field_72781_x, 4864);
+      var5 = -16.0F;
+      var4.func_78382_b();
+
+      for(var8 = -var6 * var7; var8 <= var6 * var7; var8 += var6) {
+         for(var9 = -var6 * var7; var9 <= var6 * var7; var9 += var6) {
+            var4.func_78377_a((double)(var8 + var6), (double)var5, (double)(var9 + 0));
+            var4.func_78377_a((double)(var8 + 0), (double)var5, (double)(var9 + 0));
+            var4.func_78377_a((double)(var8 + 0), (double)var5, (double)(var9 + var6));
+            var4.func_78377_a((double)(var8 + var6), (double)var5, (double)(var9 + var6));
+         }
+      }
+
+      var4.func_78381_a();
+      GL11.glEndList();
+   }
+
+   private void func_72730_g() {
+      Random var1 = new Random(10842L);
+      Tessellator var2 = Tessellator.field_78398_a;
+      var2.func_78382_b();
+
+      for(int var3 = 0; var3 < 1500; ++var3) {
+         double var4 = (double)(var1.nextFloat() * 2.0F - 1.0F);
+         double var6 = (double)(var1.nextFloat() * 2.0F - 1.0F);
+         double var8 = (double)(var1.nextFloat() * 2.0F - 1.0F);
+         double var10 = (double)(0.15F + var1.nextFloat() * 0.1F);
+         double var12 = var4 * var4 + var6 * var6 + var8 * var8;
+         if(var12 < 1.0D && var12 > 0.01D) {
+            var12 = 1.0D / Math.sqrt(var12);
+            var4 *= var12;
+            var6 *= var12;
+            var8 *= var12;
+            double var14 = var4 * 100.0D;
+            double var16 = var6 * 100.0D;
+            double var18 = var8 * 100.0D;
+            double var20 = Math.atan2(var4, var8);
+            double var22 = Math.sin(var20);
+            double var24 = Math.cos(var20);
+            double var26 = Math.atan2(Math.sqrt(var4 * var4 + var8 * var8), var6);
+            double var28 = Math.sin(var26);
+            double var30 = Math.cos(var26);
+            double var32 = var1.nextDouble() * 3.141592653589793D * 2.0D;
+            double var34 = Math.sin(var32);
+            double var36 = Math.cos(var32);
+
+            for(int var38 = 0; var38 < 4; ++var38) {
+               double var39 = 0.0D;
+               double var41 = (double)((var38 & 2) - 1) * var10;
+               double var43 = (double)((var38 + 1 & 2) - 1) * var10;
+               double var47 = var41 * var36 - var43 * var34;
+               double var49 = var43 * var36 + var41 * var34;
+               double var53 = var47 * var28 + var39 * var30;
+               double var55 = var39 * var28 - var47 * var30;
+               double var57 = var55 * var22 - var49 * var24;
+               double var61 = var49 * var22 + var55 * var24;
+               var2.func_78377_a(var14 + var57, var16 + var53, var18 + var61);
+            }
+         }
+      }
+
+      var2.func_78381_a();
+   }
+
+   public void func_72732_a(WorldClient par1WorldClient) {
+      if(this.field_72769_h != null) {
+         this.field_72769_h.func_72848_b(this);
+      }
+
+      this.field_72758_d = -9999.0D;
+      this.field_72759_e = -9999.0D;
+      this.field_72756_f = -9999.0D;
+      this.field_147596_f = -9999.0D;
+      this.field_147597_g = -9999.0D;
+      this.field_147602_h = -9999.0D;
+      this.field_147603_i = -9999;
+      this.field_147600_j = -9999;
+      this.field_147601_k = -9999;
+      RenderManager.field_78727_a.func_78717_a(par1WorldClient);
+      this.field_72769_h = par1WorldClient;
+      this.field_147592_B = new RenderBlocks(par1WorldClient);
+      if(Config.isDynamicLights()) {
+         DynamicLights.clear();
+      }
+
+      if(par1WorldClient != null) {
+         par1WorldClient.func_72954_a(this);
+         this.func_72712_a();
+      }
+
+   }
+
+   public void func_72712_a() {
+      if(this.field_72769_h != null) {
+         Blocks.field_150362_t.func_150122_b(Config.isTreesFancy());
+         Blocks.field_150361_u.func_150122_b(Config.isTreesFancy());
+         this.field_72739_F = this.field_72777_q.field_71474_y.field_151451_c;
+         WrUpdates.clearAllUpdates();
+         int numChunks;
+         if(this.field_72765_l != null) {
+            for(numChunks = 0; numChunks < this.field_72765_l.length; ++numChunks) {
+               this.field_72765_l[numChunks].func_78911_c();
+            }
+         }
+
+         if(Config.isDynamicLights()) {
+            DynamicLights.clear();
+         }
+
+         numChunks = this.field_72777_q.field_71474_y.field_151451_c;
+         byte numChunksFar = 16;
+         if(Config.isLoadChunksFar() && numChunks < numChunksFar) {
+            numChunks = numChunksFar;
+         }
+
+         int maxPreloadedChunks = Config.limit(numChunksFar - numChunks, 0, 8);
+         this.effectivePreloadedChunks = Config.limit(Config.getPreloadedChunks(), 0, maxPreloadedChunks);
+         numChunks += this.effectivePreloadedChunks;
+         byte limit = 32;
+         if(numChunks > limit) {
+            numChunks = limit;
+         }
+
+         this.prevReposX = -9999.0D;
+         this.prevReposY = -9999.0D;
+         this.prevReposZ = -9999.0D;
+         int var1 = numChunks * 2 + 1;
+         this.field_72766_m = var1;
+         this.field_72763_n = 16;
+         this.field_72764_o = var1;
+         this.field_72765_l = new WorldRenderer[this.field_72766_m * this.field_72763_n * this.field_72764_o];
+         this.field_72768_k = new WorldRenderer[this.field_72766_m * this.field_72763_n * this.field_72764_o];
+         this.countSortedWorldRenderers = 0;
+         this.displayListAllocator.resetAllocatedLists();
+         int var2 = 0;
+         int var3 = 0;
+         this.field_72780_y = 0;
+         this.field_72779_z = 0;
+         this.field_72741_A = 0;
+         this.field_72742_B = this.field_72766_m;
+         this.field_72743_C = this.field_72763_n;
+         this.field_72737_D = this.field_72764_o;
+
+         int var10;
+         for(var10 = 0; var10 < this.field_72767_j.size(); ++var10) {
+            WorldRenderer esf = (WorldRenderer)this.field_72767_j.get(var10);
+            if(esf != null) {
+               esf.field_78939_q = false;
+            }
+         }
+
+         this.field_72767_j.clear();
+         this.field_147598_a.clear();
+         this.func_147584_b();
+
+         for(var10 = 0; var10 < this.field_72766_m; ++var10) {
+            for(int var14 = 0; var14 < this.field_72763_n; ++var14) {
+               for(int cz = 0; cz < this.field_72764_o; ++cz) {
+                  int wri = (cz * this.field_72763_n + var14) * this.field_72766_m + var10;
+                  this.field_72765_l[wri] = WrUpdates.makeWorldRenderer(this.field_72769_h, this.field_147598_a, var10 * 16, var14 * 16, cz * 16, this.field_72778_p + var2);
+                  if(this.field_72774_t) {
+                     this.field_72765_l[wri].field_78934_v = this.field_72775_s.get(var3);
+                  }
+
+                  this.field_72765_l[wri].field_78935_u = false;
+                  this.field_72765_l[wri].field_78936_t = true;
+                  this.field_72765_l[wri].field_78927_l = false;
+                  this.field_72765_l[wri].field_78937_s = var3++;
+                  if(this.field_72769_h.func_72899_e(var10 << 4, 0, cz << 4)) {
+                     this.field_72765_l[wri].func_78914_f();
+                     this.field_72767_j.add(this.field_72765_l[wri]);
+                  }
+
+                  var2 += 3;
+               }
+            }
+         }
+
+         if(this.field_72769_h != null) {
+            Object var13 = this.field_72777_q.field_71451_h;
+            if(var13 == null) {
+               var13 = this.field_72777_q.field_71439_g;
+            }
+
+            if(var13 != null) {
+               this.func_72722_c(MathHelper.func_76128_c(((EntityLivingBase)var13).field_70165_t), MathHelper.func_76128_c(((EntityLivingBase)var13).field_70163_u), MathHelper.func_76128_c(((EntityLivingBase)var13).field_70161_v));
+               EntitySorterFast var15 = new EntitySorterFast((Entity)var13);
+               var15.prepareToSort(this.field_72768_k, this.countSortedWorldRenderers);
+               Arrays.sort(this.field_72768_k, 0, this.countSortedWorldRenderers, var15);
+            }
+         }
+
+         this.field_72740_G = 2;
+      }
+
+   }
+
+   public void func_147589_a(EntityLivingBase p_147589_1_, ICamera p_147589_2_, float p_147589_3_) {
+      int pass = 0;
+      if(Reflector.MinecraftForgeClient_getRenderPass.exists()) {
+         pass = Reflector.callInt(Reflector.MinecraftForgeClient_getRenderPass, new Object[0]);
+      }
+
+      boolean hasEntityShouldRenderInPass = Reflector.ForgeEntity_shouldRenderInPass.exists();
+      boolean hasTileEntityShouldRenderInPass = Reflector.ForgeTileEntity_shouldRenderInPass.exists();
+      if(this.field_72740_G > 0) {
+         if(pass > 0) {
+            return;
+         }
+
+         --this.field_72740_G;
+      } else {
+         double var4 = p_147589_1_.field_70169_q + (p_147589_1_.field_70165_t - p_147589_1_.field_70169_q) * (double)p_147589_3_;
+         double var6 = p_147589_1_.field_70167_r + (p_147589_1_.field_70163_u - p_147589_1_.field_70167_r) * (double)p_147589_3_;
+         double var8 = p_147589_1_.field_70166_s + (p_147589_1_.field_70161_v - p_147589_1_.field_70166_s) * (double)p_147589_3_;
+         this.field_72769_h.field_72984_F.func_76320_a("prepare");
+         TileEntityRendererDispatcher.field_147556_a.func_147542_a(this.field_72769_h, this.field_72777_q.func_110434_K(), this.field_72777_q.field_71466_p, this.field_72777_q.field_71451_h, p_147589_3_);
+         RenderManager.field_78727_a.func_147938_a(this.field_72769_h, this.field_72777_q.func_110434_K(), this.field_72777_q.field_71466_p, this.field_72777_q.field_71451_h, this.field_72777_q.field_147125_j, this.field_72777_q.field_71474_y, p_147589_3_);
+         if(pass == 0) {
+            this.field_72748_H = 0;
+            this.field_72749_I = 0;
+            this.field_72750_J = 0;
+            this.countTileEntitiesRendered = 0;
+            EntityLivingBase var17 = this.field_72777_q.field_71451_h;
+            double var18 = var17.field_70142_S + (var17.field_70165_t - var17.field_70142_S) * (double)p_147589_3_;
+            double oldFancyGraphics = var17.field_70137_T + (var17.field_70163_u - var17.field_70137_T) * (double)p_147589_3_;
+            double aabb = var17.field_70136_U + (var17.field_70161_v - var17.field_70136_U) * (double)p_147589_3_;
+            TileEntityRendererDispatcher.field_147554_b = var18;
+            TileEntityRendererDispatcher.field_147555_c = oldFancyGraphics;
+            TileEntityRendererDispatcher.field_147552_d = aabb;
+            this.field_72769_h.field_72984_F.func_76318_c("staticentities");
+            if(this.field_147595_R) {
+               RenderManager.field_78725_b = 0.0D;
+               RenderManager.field_78726_c = 0.0D;
+               RenderManager.field_78723_d = 0.0D;
+               this.func_147591_f();
+            }
+
+            GL11.glMatrixMode(5888);
+            GL11.glPushMatrix();
+            GL11.glTranslated(-var18, -oldFancyGraphics, -aabb);
+            GL11.glCallList(this.field_147594_S);
+            GL11.glPopMatrix();
+            RenderManager.field_78725_b = var18;
+            RenderManager.field_78726_c = oldFancyGraphics;
+            RenderManager.field_78723_d = aabb;
+         }
+
+         this.field_72777_q.field_71460_t.func_78463_b((double)p_147589_3_);
+         this.field_72769_h.field_72984_F.func_76318_c("global");
+         List var24 = this.field_72769_h.func_72910_y();
+         if(pass == 0) {
+            this.field_72748_H = var24.size();
+         }
+
+         if(Config.isFogOff() && this.field_72777_q.field_71460_t.fogStandard) {
+            GL11.glDisable(2912);
+         }
+
+         Entity var19;
+         int var25;
+         for(var25 = 0; var25 < this.field_72769_h.field_73007_j.size(); ++var25) {
+            var19 = (Entity)this.field_72769_h.field_73007_j.get(var25);
+            if(!hasEntityShouldRenderInPass || Reflector.callBoolean(var19, Reflector.ForgeEntity_shouldRenderInPass, new Object[]{Integer.valueOf(pass)})) {
+               ++this.field_72749_I;
+               if(var19.func_145770_h(var4, var6, var8)) {
+                  RenderManager.field_78727_a.func_147937_a(var19, p_147589_3_);
+               }
+            }
+         }
+
+         this.field_72769_h.field_72984_F.func_76318_c("entities");
+         boolean var26 = this.field_72777_q.field_71474_y.field_74347_j;
+         this.field_72777_q.field_71474_y.field_74347_j = Config.isDroppedItemsFancy();
+
+         for(var25 = 0; var25 < var24.size(); ++var25) {
+            var19 = (Entity)var24.get(var25);
+            if(!hasEntityShouldRenderInPass || Reflector.callBoolean(var19, Reflector.ForgeEntity_shouldRenderInPass, new Object[]{Integer.valueOf(pass)})) {
+               boolean te = var19.func_145770_h(var4, var6, var8) && (var19.field_70158_ak || p_147589_2_.func_78546_a(var19.field_70121_D) || var19.field_70153_n == this.field_72777_q.field_71439_g);
+               if(!te && var19 instanceof EntityLiving) {
+                  EntityLiving var28 = (EntityLiving)var19;
+                  if(var28.func_110167_bD() && var28.func_110166_bE() != null) {
+                     Entity teClass = var28.func_110166_bE();
+                     te = p_147589_2_.func_78546_a(teClass.field_70121_D);
+                  }
+               }
+
+               if(te && (var19 != this.field_72777_q.field_71451_h || this.field_72777_q.field_71474_y.field_74320_O != 0 || this.field_72777_q.field_71451_h.func_70608_bn()) && this.field_72769_h.func_72899_e(MathHelper.func_76128_c(var19.field_70165_t), 0, MathHelper.func_76128_c(var19.field_70161_v))) {
+                  ++this.field_72749_I;
+                  if(var19.getClass() == EntityItemFrame.class) {
+                     var19.field_70155_l = 0.06D;
+                  }
+
+                  this.renderedEntity = var19;
+                  RenderManager.field_78727_a.func_147937_a(var19, p_147589_3_);
+                  this.renderedEntity = null;
+               }
+            }
+         }
+
+         this.field_72777_q.field_71474_y.field_74347_j = var26;
+         this.field_72769_h.field_72984_F.func_76318_c("blockentities");
+         RenderHelper.func_74519_b();
+
+         for(var25 = 0; var25 < this.field_147598_a.size(); ++var25) {
+            TileEntity var27 = (TileEntity)this.field_147598_a.get(var25);
+            if(!hasTileEntityShouldRenderInPass || Reflector.callBoolean(var27, Reflector.ForgeTileEntity_shouldRenderInPass, new Object[]{Integer.valueOf(pass)})) {
+               AxisAlignedBB var29 = this.getTileEntityBoundingBox(var27);
+               if(var29 == AABB_INFINITE || p_147589_2_.func_78546_a(var29)) {
+                  Class var30 = var27.getClass();
+                  if(var30 == TileEntitySign.class && !Config.zoomMode) {
+                     EntityClientPlayerMP block = this.field_72777_q.field_71439_g;
+                     double distSq = var27.func_145835_a(block.field_70165_t, block.field_70163_u, block.field_70161_v);
+                     if(distSq > 256.0D) {
+                        FontRenderer fr = TileEntityRendererDispatcher.field_147556_a.func_147548_a();
+                        fr.enabled = false;
+                        TileEntityRendererDispatcher.field_147556_a.func_147544_a(var27, p_147589_3_);
+                        ++this.countTileEntitiesRendered;
+                        fr.enabled = true;
+                        continue;
+                     }
+                  }
+
+                  if(var30 == TileEntityChest.class) {
+                     Block var31 = this.field_72769_h.func_147439_a(var27.field_145851_c, var27.field_145848_d, var27.field_145849_e);
+                     if(!(var31 instanceof BlockChest)) {
+                        continue;
+                     }
+                  }
+
+                  TileEntityRendererDispatcher.field_147556_a.func_147544_a(var27, p_147589_3_);
+                  ++this.countTileEntitiesRendered;
+               }
+            }
+         }
+
+         this.field_72777_q.field_71460_t.func_78483_a((double)p_147589_3_);
+         this.field_72769_h.field_72984_F.func_76319_b();
+      }
+
+   }
+
+   public String func_72735_c() {
+      return "C: " + this.field_72746_N + "/" + this.field_72751_K + ". F: " + this.field_72744_L + ", O: " + this.field_72745_M + ", E: " + this.field_72747_O;
+   }
+
+   public String func_72723_d() {
+      return "E: " + this.field_72749_I + "/" + this.field_72748_H + ". B: " + this.field_72750_J + ", I: " + (this.field_72748_H - this.field_72750_J - this.field_72749_I) + ", " + Config.getVersionDebug();
+   }
+
+   public void func_147584_b() {
+      this.field_147595_R = true;
+   }
+
+   public void func_147591_f() {
+      this.field_72769_h.field_72984_F.func_76320_a("staticentityrebuild");
+      GL11.glPushMatrix();
+      GL11.glNewList(this.field_147594_S, 4864);
+      List var1 = this.field_72769_h.func_72910_y();
+      this.field_147595_R = false;
+
+      for(int var2 = 0; var2 < var1.size(); ++var2) {
+         Entity var3 = (Entity)var1.get(var2);
+         if(RenderManager.field_78727_a.func_78713_a(var3).func_147905_a()) {
+            this.field_147595_R = this.field_147595_R || !RenderManager.field_78727_a.func_147936_a(var3, 0.0F, true);
+         }
+      }
+
+      GL11.glEndList();
+      GL11.glPopMatrix();
+      this.field_72769_h.field_72984_F.func_76319_b();
+   }
+
+   private void func_72722_c(int x, int y, int z) {
+      x -= 8;
+      y -= 8;
+      z -= 8;
+      this.field_72780_y = Integer.MAX_VALUE;
+      this.field_72779_z = Integer.MAX_VALUE;
+      this.field_72741_A = Integer.MAX_VALUE;
+      this.field_72742_B = Integer.MIN_VALUE;
+      this.field_72743_C = Integer.MIN_VALUE;
+      this.field_72737_D = Integer.MIN_VALUE;
+      int blocksWide = this.field_72766_m * 16;
+      int blocksWide2 = blocksWide / 2;
+
+      for(int ix = 0; ix < this.field_72766_m; ++ix) {
+         int blockX = ix * 16;
+         int blockXAbs = blockX + blocksWide2 - x;
+         if(blockXAbs < 0) {
+            blockXAbs -= blocksWide - 1;
+         }
+
+         blockXAbs /= blocksWide;
+         blockX -= blockXAbs * blocksWide;
+         if(blockX < this.field_72780_y) {
+            this.field_72780_y = blockX;
+         }
+
+         if(blockX > this.field_72742_B) {
+            this.field_72742_B = blockX;
+         }
+
+         for(int iz = 0; iz < this.field_72764_o; ++iz) {
+            int blockZ = iz * 16;
+            int blockZAbs = blockZ + blocksWide2 - z;
+            if(blockZAbs < 0) {
+               blockZAbs -= blocksWide - 1;
+            }
+
+            blockZAbs /= blocksWide;
+            blockZ -= blockZAbs * blocksWide;
+            if(blockZ < this.field_72741_A) {
+               this.field_72741_A = blockZ;
+            }
+
+            if(blockZ > this.field_72737_D) {
+               this.field_72737_D = blockZ;
+            }
+
+            for(int iy = 0; iy < this.field_72763_n; ++iy) {
+               int blockY = iy * 16;
+               if(blockY < this.field_72779_z) {
+                  this.field_72779_z = blockY;
+               }
+
+               if(blockY > this.field_72743_C) {
+                  this.field_72743_C = blockY;
+               }
+
+               WorldRenderer worldrenderer = this.field_72765_l[(iz * this.field_72763_n + iy) * this.field_72766_m + ix];
+               boolean wasNeedingUpdate = worldrenderer.field_78939_q;
+               worldrenderer.func_78913_a(blockX, blockY, blockZ);
+               if(!wasNeedingUpdate && worldrenderer.field_78939_q) {
+                  this.field_72767_j.add(worldrenderer);
+               }
+            }
+         }
+      }
+
+   }
+
+   public int func_72719_a(EntityLivingBase player, int renderPass, double partialTicks) {
+      this.renderViewEntity = player;
+      if(Config.isDynamicLights()) {
+         DynamicLights.update(this);
+      }
+
+      Profiler profiler = this.field_72769_h.field_72984_F;
+      profiler.func_76320_a("sortchunks");
+      int num;
+      if(this.field_72767_j.size() < 10) {
+         byte shouldSort = 10;
+
+         for(num = 0; num < shouldSort; ++num) {
+            this.field_72752_Q = (this.field_72752_Q + 1) % this.field_72765_l.length;
+            WorldRenderer ocReq = this.field_72765_l[this.field_72752_Q];
+            if(ocReq.field_78939_q && !this.field_72767_j.contains(ocReq)) {
+               this.field_72767_j.add(ocReq);
+            }
+         }
+      }
+
+      if(this.field_72777_q.field_71474_y.field_151451_c != this.field_72739_F && !Config.isLoadChunksFar()) {
+         this.func_72712_a();
+      }
+
+      if(renderPass == 0) {
+         this.field_72751_K = 0;
+         this.field_72753_P = 0;
+         this.field_72744_L = 0;
+         this.field_72745_M = 0;
+         this.field_72746_N = 0;
+         this.field_72747_O = 0;
+      }
+
+      boolean var33 = this.field_147603_i != player.field_70176_ah || this.field_147600_j != player.field_70162_ai || this.field_147601_k != player.field_70164_aj;
+      double partialX;
+      double partialY;
+      double partialZ;
+      double var34;
+      if(!var33) {
+         var34 = player.field_70165_t - this.field_72758_d;
+         partialX = player.field_70163_u - this.field_72759_e;
+         partialY = player.field_70161_v - this.field_72756_f;
+         partialZ = var34 * var34 + partialX * partialX + partialY * partialY;
+         var33 = partialZ > 16.0D;
+      }
+
+      int endIndex;
+      int stepNum;
+      if(var33) {
+         this.field_147603_i = player.field_70176_ah;
+         this.field_147600_j = player.field_70162_ai;
+         this.field_147601_k = player.field_70164_aj;
+         this.field_72758_d = player.field_70165_t;
+         this.field_72759_e = player.field_70163_u;
+         this.field_72756_f = player.field_70161_v;
+         num = this.effectivePreloadedChunks * 16;
+         double var36 = player.field_70165_t - this.prevReposX;
+         double dReposY = player.field_70163_u - this.prevReposY;
+         double dReposZ = player.field_70161_v - this.prevReposZ;
+         double countResort = var36 * var36 + dReposY * dReposY + dReposZ * dReposZ;
+         if(countResort > (double)(num * num) + 16.0D) {
+            this.prevReposX = player.field_70165_t;
+            this.prevReposY = player.field_70163_u;
+            this.prevReposZ = player.field_70161_v;
+            this.func_72722_c(MathHelper.func_76128_c(player.field_70165_t), MathHelper.func_76128_c(player.field_70163_u), MathHelper.func_76128_c(player.field_70161_v));
+         }
+
+         EntitySorterFast lastIndex = new EntitySorterFast(player);
+         lastIndex.prepareToSort(this.field_72768_k, this.countSortedWorldRenderers);
+         Arrays.sort(this.field_72768_k, 0, this.countSortedWorldRenderers, lastIndex);
+         if(Config.isFastRender()) {
+            endIndex = (int)player.field_70165_t;
+            stepNum = (int)player.field_70161_v;
+            short step = 2000;
+            if(Math.abs(endIndex - WorldRenderer.globalChunkOffsetX) > step || Math.abs(stepNum - WorldRenderer.globalChunkOffsetZ) > step) {
+               WorldRenderer.globalChunkOffsetX = endIndex;
+               WorldRenderer.globalChunkOffsetZ = stepNum;
+               this.func_72712_a();
+            }
+         }
+      }
+
+      if(Config.isTranslucentBlocksFancy()) {
+         var34 = player.field_70165_t - this.field_147596_f;
+         partialX = player.field_70163_u - this.field_147597_g;
+         partialY = player.field_70161_v - this.field_147602_h;
+         int var39 = Math.min(27, this.countSortedWorldRenderers);
+         WorldRenderer firstIndex;
+         if(var34 * var34 + partialX * partialX + partialY * partialY > 1.0D) {
+            this.field_147596_f = player.field_70165_t;
+            this.field_147597_g = player.field_70163_u;
+            this.field_147602_h = player.field_70161_v;
+
+            for(int var38 = 0; var38 < var39; ++var38) {
+               firstIndex = this.field_72768_k[var38];
+               if(firstIndex.field_147894_y != null && firstIndex.sortDistanceToEntitySquared < 1152.0F) {
+                  firstIndex.needVertexStateResort = true;
+                  if(this.vertexResortCounter > var38) {
+                     this.vertexResortCounter = var38;
+                  }
+               }
+            }
+         }
+
+         if(this.vertexResortCounter < var39) {
+            while(this.vertexResortCounter < var39) {
+               firstIndex = this.field_72768_k[this.vertexResortCounter];
+               ++this.vertexResortCounter;
+               if(firstIndex.needVertexStateResort) {
+                  firstIndex.func_147889_b(player);
+                  break;
+               }
+            }
+         }
+      }
+
+      RenderHelper.func_74518_a();
+      WrUpdates.preRender(this, player);
+      if(this.field_72777_q.field_71474_y.ofSmoothFps && renderPass == 0) {
+         GL11.glFinish();
+      }
+
+      byte var35 = 0;
+      int var37 = 0;
+      if(this.field_72774_t && this.field_72777_q.field_71474_y.field_74349_h && !this.field_72777_q.field_71474_y.field_74337_g && renderPass == 0) {
+         partialX = player.field_70142_S + (player.field_70165_t - player.field_70142_S) * partialTicks;
+         partialY = player.field_70137_T + (player.field_70163_u - player.field_70137_T) * partialTicks;
+         partialZ = player.field_70136_U + (player.field_70161_v - player.field_70136_U) * partialTicks;
+         byte var40 = 0;
+         int var41 = Math.min(20, this.countSortedWorldRenderers);
+         this.checkOcclusionQueryResult(var40, var41, player.field_70165_t, player.field_70163_u, player.field_70161_v);
+
+         for(endIndex = var40; endIndex < var41; ++endIndex) {
+            this.field_72768_k[endIndex].field_78936_t = true;
+         }
+
+         profiler.func_76318_c("render");
+         num = var35 + this.func_72724_a(var40, var41, renderPass, partialTicks);
+         endIndex = var41;
+         stepNum = 0;
+         byte var42 = 40;
+
+         int startIndex;
+         for(int switchStep = this.field_72766_m; endIndex < this.countSortedWorldRenderers; num += this.func_72724_a(startIndex, endIndex, renderPass, partialTicks)) {
+            profiler.func_76318_c("occ");
+            startIndex = endIndex;
+            if(stepNum < switchStep) {
+               ++stepNum;
+            } else {
+               --stepNum;
+            }
+
+            endIndex += stepNum * var42;
+            if(endIndex <= startIndex) {
+               endIndex = startIndex + 10;
+            }
+
+            if(endIndex > this.countSortedWorldRenderers) {
+               endIndex = this.countSortedWorldRenderers;
+            }
+
+            GL11.glDisable(3553);
+            GL11.glDisable(2896);
+            GL11.glDisable(3008);
+            GL11.glDisable(2912);
+            GL11.glColorMask(false, false, false, false);
+            GL11.glDepthMask(false);
+            profiler.func_76320_a("check");
+            this.checkOcclusionQueryResult(startIndex, endIndex, player.field_70165_t, player.field_70163_u, player.field_70161_v);
+            profiler.func_76319_b();
+            GL11.glPushMatrix();
+            float sumTX = 0.0F;
+            float sumTY = 0.0F;
+            float sumTZ = 0.0F;
+
+            for(int k = startIndex; k < endIndex; ++k) {
+               WorldRenderer wr = this.field_72768_k[k];
+               if(wr.func_78906_e()) {
+                  wr.field_78927_l = false;
+               } else if(!wr.isUpdating && !wr.needsBoxUpdate) {
+                  if(wr.field_78927_l) {
+                     if(Config.isOcclusionFancy() && !wr.isInFrustrumFully) {
+                        wr.field_78936_t = true;
+                     } else if(wr.field_78927_l && !wr.field_78935_u) {
+                        float bbX;
+                        float bbY;
+                        float bbZ;
+                        float tX;
+                        if(wr.isVisibleFromPosition) {
+                           bbX = Math.abs((float)(wr.visibleFromX - player.field_70165_t));
+                           bbY = Math.abs((float)(wr.visibleFromY - player.field_70163_u));
+                           bbZ = Math.abs((float)(wr.visibleFromZ - player.field_70161_v));
+                           tX = bbX + bbY + bbZ;
+                           if((double)tX < 10.0D + (double)k / 1000.0D) {
+                              wr.field_78936_t = true;
+                              continue;
+                           }
+
+                           wr.isVisibleFromPosition = false;
+                        }
+
+                        bbX = (float)((double)wr.field_78918_f - partialX);
+                        bbY = (float)((double)wr.field_78919_g - partialY);
+                        bbZ = (float)((double)wr.field_78931_h - partialZ);
+                        tX = bbX - sumTX;
+                        float tY = bbY - sumTY;
+                        float tZ = bbZ - sumTZ;
+                        if(tX != 0.0F || tY != 0.0F || tZ != 0.0F) {
+                           GL11.glTranslatef(tX, tY, tZ);
+                           sumTX += tX;
+                           sumTY += tY;
+                           sumTZ += tZ;
+                        }
+
+                        profiler.func_76320_a("bb");
+                        ARBOcclusionQuery.glBeginQueryARB('\u8914', wr.field_78934_v);
+                        wr.func_78904_d();
+                        ARBOcclusionQuery.glEndQueryARB('\u8914');
+                        profiler.func_76319_b();
+                        wr.field_78935_u = true;
+                        ++var37;
+                     }
+                  }
+               } else {
+                  wr.field_78936_t = true;
+               }
+            }
+
+            GL11.glPopMatrix();
+            if(this.field_72777_q.field_71474_y.field_74337_g) {
+               if(EntityRenderer.field_78515_b == 0) {
+                  GL11.glColorMask(false, true, true, true);
+               } else {
+                  GL11.glColorMask(true, false, false, true);
+               }
+            } else {
+               GL11.glColorMask(true, true, true, true);
+            }
+
+            GL11.glDepthMask(true);
+            GL11.glEnable(3553);
+            GL11.glEnable(3008);
+            GL11.glEnable(2912);
+            profiler.func_76318_c("render");
+         }
+      } else {
+         profiler.func_76318_c("render");
+         num = var35 + this.func_72724_a(0, this.countSortedWorldRenderers, renderPass, partialTicks);
+      }
+
+      profiler.func_76319_b();
+      WrUpdates.postRender();
+      return num;
+   }
+
+   private void checkOcclusionQueryResult(int startIndex, int endIndex, double px, double py, double pz) {
+      for(int k = startIndex; k < endIndex; ++k) {
+         WorldRenderer wr = this.field_72768_k[k];
+         if(wr.field_78935_u) {
+            this.field_72761_c.clear();
+            ARBOcclusionQuery.glGetQueryObjectuARB(wr.field_78934_v, '\u8867', this.field_72761_c);
+            if(this.field_72761_c.get(0) != 0) {
+               wr.field_78935_u = false;
+               this.field_72761_c.clear();
+               ARBOcclusionQuery.glGetQueryObjectuARB(wr.field_78934_v, '\u8866', this.field_72761_c);
+               if(!wr.isUpdating && !wr.needsBoxUpdate) {
+                  boolean wasVisible = wr.field_78936_t;
+                  wr.field_78936_t = this.field_72761_c.get(0) > 0;
+                  if(wasVisible && wr.field_78936_t) {
+                     wr.isVisibleFromPosition = true;
+                     wr.visibleFromX = px;
+                     wr.visibleFromY = py;
+                     wr.visibleFromZ = pz;
+                  }
+               } else {
+                  wr.field_78936_t = true;
+               }
+            }
+         }
+      }
+
+   }
+
+   private int func_72724_a(int par1, int par2, int par3, double par4) {
+      if(Config.isFastRender()) {
+         return this.renderSortedRenderersFast(par1, par2, par3, par4);
+      } else {
+         this.field_72755_R.clear();
+         int var6 = 0;
+         int var7 = par1;
+         int var8 = par2;
+         byte var9 = 1;
+         if(par3 == 1) {
+            var7 = this.countSortedWorldRenderers - 1 - par1;
+            var8 = this.countSortedWorldRenderers - 1 - par2;
+            var9 = -1;
+         }
+
+         for(int var22 = var7; var22 != var8; var22 += var9) {
+            if(par3 == 0) {
+               ++this.field_72751_K;
+               if(this.field_72768_k[var22].field_78928_m[par3]) {
+                  ++this.field_72747_O;
+               } else if(!this.field_72768_k[var22].field_78927_l) {
+                  ++this.field_72744_L;
+               } else if(this.field_72774_t && !this.field_72768_k[var22].field_78936_t) {
+                  ++this.field_72745_M;
+               } else {
+                  ++this.field_72746_N;
+               }
+            }
+
+            if(!this.field_72768_k[var22].field_78928_m[par3] && this.field_72768_k[var22].field_78927_l && (!this.field_72774_t || this.field_72768_k[var22].field_78936_t)) {
+               int var23 = this.field_72768_k[var22].func_78909_a(par3);
+               if(var23 >= 0) {
+                  this.field_72755_R.add(this.field_72768_k[var22]);
+                  ++var6;
+               }
+            }
+         }
+
+         if(var6 == 0) {
+            return 0;
+         } else {
+            EntityLivingBase var221 = this.field_72777_q.field_71451_h;
+            double var231 = var221.field_70142_S + (var221.field_70165_t - var221.field_70142_S) * par4;
+            double var13 = var221.field_70137_T + (var221.field_70163_u - var221.field_70137_T) * par4;
+            double var15 = var221.field_70136_U + (var221.field_70161_v - var221.field_70136_U) * par4;
+            int var17 = 0;
+
+            int var18;
+            for(var18 = 0; var18 < this.field_72754_S.length; ++var18) {
+               this.field_72754_S[var18].func_78421_b();
+            }
+
+            int var20;
+            int var21;
+            for(var18 = 0; var18 < this.field_72755_R.size(); ++var18) {
+               WorldRenderer var24 = (WorldRenderer)this.field_72755_R.get(var18);
+               var20 = -1;
+
+               for(var21 = 0; var21 < var17; ++var21) {
+                  if(this.field_72754_S[var21].func_78418_a(var24.field_78918_f, var24.field_78919_g, var24.field_78931_h)) {
+                     var20 = var21;
+                  }
+               }
+
+               if(var20 < 0) {
+                  var20 = var17++;
+                  this.field_72754_S[var20].func_78422_a(var24.field_78918_f, var24.field_78919_g, var24.field_78931_h, var231, var13, var15);
+               }
+
+               this.field_72754_S[var20].func_78420_a(var24.func_78909_a(par3));
+            }
+
+            if(Config.isFogOff() && this.field_72777_q.field_71460_t.fogStandard) {
+               GL11.glDisable(2912);
+            }
+
+            var18 = MathHelper.func_76128_c(var231);
+            int var241 = MathHelper.func_76128_c(var15);
+            var20 = var18 - (var18 & 1023);
+            var21 = var241 - (var241 & 1023);
+            Arrays.sort(this.field_72754_S, new RenderDistanceSorter(var20, var21));
+            this.func_72733_a(par3, par4);
+            return var6;
+         }
+      }
+   }
+
+   private int renderSortedRenderersFast(int startIndex, int endIndex, int renderPass, double partialTicks) {
+      this.glListBuffer.clear();
+      int l = 0;
+      boolean debug = this.field_72777_q.field_71474_y.field_74330_P;
+      int loopStart = startIndex;
+      int loopEnd = endIndex;
+      byte loopInc = 1;
+      if(renderPass == 1) {
+         loopStart = this.countSortedWorldRenderers - 1 - startIndex;
+         loopEnd = this.countSortedWorldRenderers - 1 - endIndex;
+         loopInc = -1;
+      }
+
+      for(int entityliving = loopStart; entityliving != loopEnd; entityliving += loopInc) {
+         WorldRenderer partialX = this.field_72768_k[entityliving];
+         if(debug && renderPass == 0) {
+            ++this.field_72751_K;
+            if(partialX.field_78928_m[renderPass]) {
+               ++this.field_72747_O;
+            } else if(!partialX.field_78927_l) {
+               ++this.field_72744_L;
+            } else if(this.field_72774_t && !partialX.field_78936_t) {
+               ++this.field_72745_M;
+            } else {
+               ++this.field_72746_N;
+            }
+         }
+
+         if(partialX.field_78927_l && !partialX.field_78928_m[renderPass] && (!this.field_72774_t || partialX.field_78936_t)) {
+            int glCallList = partialX.func_78909_a(renderPass);
+            if(glCallList >= 0) {
+               this.glListBuffer.put(glCallList);
+               ++l;
+            }
+         }
+      }
+
+      if(l == 0) {
+         return 0;
+      } else {
+         if(Config.isFogOff() && this.field_72777_q.field_71460_t.fogStandard) {
+            GL11.glDisable(2912);
+         }
+
+         this.glListBuffer.flip();
+         EntityLivingBase var18 = this.field_72777_q.field_71451_h;
+         double var19 = var18.field_70142_S + (var18.field_70165_t - var18.field_70142_S) * partialTicks - (double)WorldRenderer.globalChunkOffsetX;
+         double partialY = var18.field_70137_T + (var18.field_70163_u - var18.field_70137_T) * partialTicks;
+         double partialZ = var18.field_70136_U + (var18.field_70161_v - var18.field_70136_U) * partialTicks - (double)WorldRenderer.globalChunkOffsetZ;
+         this.field_72777_q.field_71460_t.func_78463_b(partialTicks);
+         GL11.glTranslatef((float)(-var19), (float)(-partialY), (float)(-partialZ));
+         GL11.glCallLists(this.glListBuffer);
+         GL11.glTranslatef((float)var19, (float)partialY, (float)partialZ);
+         this.field_72777_q.field_71460_t.func_78483_a(partialTicks);
+         return l;
+      }
+   }
+
+   public void func_72733_a(int par1, double par2) {
+      this.field_72777_q.field_71460_t.func_78463_b(par2);
+
+      for(int var4 = 0; var4 < this.field_72754_S.length; ++var4) {
+         this.field_72754_S[var4].func_78419_a();
+      }
+
+      this.field_72777_q.field_71460_t.func_78483_a(par2);
+   }
+
+   public void func_72734_e() {
+      ++this.field_72773_u;
+      if(this.field_72773_u % 20 == 0) {
+         Iterator var1 = this.field_72738_E.values().iterator();
+
+         while(var1.hasNext()) {
+            DestroyBlockProgress var2 = (DestroyBlockProgress)var1.next();
+            int var3 = var2.func_82743_f();
+            if(this.field_72773_u - var3 > 400) {
+               var1.remove();
+            }
+         }
+      }
+
+   }
+
+   public void func_72714_a(float par1) {
+      if(Reflector.ForgeWorldProvider_getSkyRenderer.exists()) {
+         WorldProvider var2 = this.field_72777_q.field_71441_e.field_73011_w;
+         Object var3 = Reflector.call(var2, Reflector.ForgeWorldProvider_getSkyRenderer, new Object[0]);
+         if(var3 != null) {
+            Reflector.callVoid(var3, Reflector.IRenderHandler_render, new Object[]{Float.valueOf(par1), this.field_72769_h, this.field_72777_q});
+            return;
+         }
+      }
+
+      if(this.field_72777_q.field_71441_e.field_73011_w.field_76574_g == 1) {
+         if(!Config.isSkyEnabled()) {
+            return;
+         }
+
+         GL11.glDisable(2912);
+         GL11.glDisable(3008);
+         GL11.glEnable(3042);
+         OpenGlHelper.func_148821_a(770, 771, 1, 0);
+         RenderHelper.func_74518_a();
+         GL11.glDepthMask(false);
+         this.field_72770_i.func_110577_a(field_110926_k);
+         Tessellator var201 = Tessellator.field_78398_a;
+
+         for(int var22 = 0; var22 < 6; ++var22) {
+            GL11.glPushMatrix();
+            if(var22 == 1) {
+               GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+            }
+
+            if(var22 == 2) {
+               GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
+            }
+
+            if(var22 == 3) {
+               GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
+            }
+
+            if(var22 == 4) {
+               GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
+            }
+
+            if(var22 == 5) {
+               GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
+            }
+
+            var201.func_78382_b();
+            var201.func_78378_d(2631720);
+            var201.func_78374_a(-100.0D, -100.0D, -100.0D, 0.0D, 0.0D);
+            var201.func_78374_a(-100.0D, -100.0D, 100.0D, 0.0D, 16.0D);
+            var201.func_78374_a(100.0D, -100.0D, 100.0D, 16.0D, 16.0D);
+            var201.func_78374_a(100.0D, -100.0D, -100.0D, 16.0D, 0.0D);
+            var201.func_78381_a();
+            GL11.glPopMatrix();
+         }
+
+         GL11.glDepthMask(true);
+         GL11.glEnable(3553);
+         GL11.glEnable(3008);
+      } else if(this.field_72777_q.field_71441_e.field_73011_w.func_76569_d()) {
+         GL11.glDisable(3553);
+         Vec3 var21 = this.field_72769_h.func_72833_a(this.field_72777_q.field_71451_h, par1);
+         var21 = CustomColorizer.getSkyColor(var21, this.field_72777_q.field_71441_e, this.field_72777_q.field_71451_h.field_70165_t, this.field_72777_q.field_71451_h.field_70163_u + 1.0D, this.field_72777_q.field_71451_h.field_70161_v);
+         float var231 = (float)var21.field_72450_a;
+         float var4 = (float)var21.field_72448_b;
+         float var5 = (float)var21.field_72449_c;
+         float var8;
+         if(this.field_72777_q.field_71474_y.field_74337_g) {
+            float var23 = (var231 * 30.0F + var4 * 59.0F + var5 * 11.0F) / 100.0F;
+            float var24 = (var231 * 30.0F + var4 * 70.0F) / 100.0F;
+            var8 = (var231 * 30.0F + var5 * 70.0F) / 100.0F;
+            var231 = var23;
+            var4 = var24;
+            var5 = var8;
+         }
+
+         GL11.glColor3f(var231, var4, var5);
+         Tessellator var241 = Tessellator.field_78398_a;
+         GL11.glDepthMask(false);
+         GL11.glEnable(2912);
+         GL11.glColor3f(var231, var4, var5);
+         if(Config.isSkyEnabled()) {
+            GL11.glCallList(this.field_72771_w);
+         }
+
+         GL11.glDisable(2912);
+         GL11.glDisable(3008);
+         GL11.glEnable(3042);
+         OpenGlHelper.func_148821_a(770, 771, 1, 0);
+         RenderHelper.func_74518_a();
+         float[] var251 = this.field_72769_h.field_73011_w.func_76560_a(this.field_72769_h.func_72826_c(par1), par1);
+         float var9;
+         float var10;
+         float var11;
+         float var12;
+         float var20;
+         int var30;
+         float var16;
+         float var17;
+         if(var251 != null && Config.isSunMoonEnabled()) {
+            GL11.glDisable(3553);
+            GL11.glShadeModel(7425);
+            GL11.glPushMatrix();
+            GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(MathHelper.func_76126_a(this.field_72769_h.func_72929_e(par1)) < 0.0F?180.0F:0.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(90.0F, 0.0F, 0.0F, 1.0F);
+            var8 = var251[0];
+            var9 = var251[1];
+            var10 = var251[2];
+            if(this.field_72777_q.field_71474_y.field_74337_g) {
+               var11 = (var8 * 30.0F + var9 * 59.0F + var10 * 11.0F) / 100.0F;
+               var12 = (var8 * 30.0F + var9 * 70.0F) / 100.0F;
+               var20 = (var8 * 30.0F + var10 * 70.0F) / 100.0F;
+               var8 = var11;
+               var9 = var12;
+               var10 = var20;
+            }
+
+            var241.func_78371_b(6);
+            var241.func_78369_a(var8, var9, var10, var251[3]);
+            var241.func_78377_a(0.0D, 100.0D, 0.0D);
+            byte var25 = 16;
+            var241.func_78369_a(var251[0], var251[1], var251[2], 0.0F);
+
+            for(var30 = 0; var30 <= var25; ++var30) {
+               var20 = (float)var30 * 3.1415927F * 2.0F / (float)var25;
+               var16 = MathHelper.func_76126_a(var20);
+               var17 = MathHelper.func_76134_b(var20);
+               var241.func_78377_a((double)(var16 * 120.0F), (double)(var17 * 120.0F), (double)(-var17 * 40.0F * var251[3]));
+            }
+
+            var241.func_78381_a();
+            GL11.glPopMatrix();
+            GL11.glShadeModel(7424);
+         }
+
+         GL11.glEnable(3553);
+         OpenGlHelper.func_148821_a(770, 1, 1, 0);
+         GL11.glPushMatrix();
+         var8 = 1.0F - this.field_72769_h.func_72867_j(par1);
+         var9 = 0.0F;
+         var10 = 0.0F;
+         var11 = 0.0F;
+         GL11.glColor4f(1.0F, 1.0F, 1.0F, var8);
+         GL11.glTranslatef(var9, var10, var11);
+         GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+         CustomSky.renderSky(this.field_72769_h, this.field_72770_i, this.field_72769_h.func_72826_c(par1), var8);
+         GL11.glRotatef(this.field_72769_h.func_72826_c(par1) * 360.0F, 1.0F, 0.0F, 0.0F);
+         if(Config.isSunMoonEnabled()) {
+            var12 = 30.0F;
+            this.field_72770_i.func_110577_a(field_110928_i);
+            var241.func_78382_b();
+            var241.func_78374_a((double)(-var12), 100.0D, (double)(-var12), 0.0D, 0.0D);
+            var241.func_78374_a((double)var12, 100.0D, (double)(-var12), 1.0D, 0.0D);
+            var241.func_78374_a((double)var12, 100.0D, (double)var12, 1.0D, 1.0D);
+            var241.func_78374_a((double)(-var12), 100.0D, (double)var12, 0.0D, 1.0D);
+            var241.func_78381_a();
+            var12 = 20.0F;
+            this.field_72770_i.func_110577_a(field_110927_h);
+            int var26 = this.field_72769_h.func_72853_d();
+            int var27 = var26 % 4;
+            var30 = var26 / 4 % 2;
+            var16 = (float)(var27 + 0) / 4.0F;
+            var17 = (float)(var30 + 0) / 2.0F;
+            float var18 = (float)(var27 + 1) / 4.0F;
+            float var19 = (float)(var30 + 1) / 2.0F;
+            var241.func_78382_b();
+            var241.func_78374_a((double)(-var12), -100.0D, (double)var12, (double)var18, (double)var19);
+            var241.func_78374_a((double)var12, -100.0D, (double)var12, (double)var16, (double)var19);
+            var241.func_78374_a((double)var12, -100.0D, (double)(-var12), (double)var16, (double)var17);
+            var241.func_78374_a((double)(-var12), -100.0D, (double)(-var12), (double)var18, (double)var17);
+            var241.func_78381_a();
+         }
+
+         GL11.glDisable(3553);
+         var20 = this.field_72769_h.func_72880_h(par1) * var8;
+         if(var20 > 0.0F && Config.isStarsEnabled() && !CustomSky.hasSkyLayers(this.field_72769_h)) {
+            GL11.glColor4f(var20, var20, var20, var20);
+            GL11.glCallList(this.field_72772_v);
+         }
+
+         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GL11.glDisable(3042);
+         GL11.glEnable(3008);
+         GL11.glEnable(2912);
+         GL11.glPopMatrix();
+         GL11.glDisable(3553);
+         GL11.glColor3f(0.0F, 0.0F, 0.0F);
+         double var28 = this.field_72777_q.field_71439_g.func_70666_h(par1).field_72448_b - this.field_72769_h.func_72919_O();
+         if(var28 < 0.0D) {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.0F, 12.0F, 0.0F);
+            GL11.glCallList(this.field_72781_x);
+            GL11.glPopMatrix();
+            var10 = 1.0F;
+            var11 = -((float)(var28 + 65.0D));
+            var12 = -var10;
+            var241.func_78382_b();
+            var241.func_78384_a(0, 255);
+            var241.func_78377_a((double)(-var10), (double)var11, (double)var10);
+            var241.func_78377_a((double)var10, (double)var11, (double)var10);
+            var241.func_78377_a((double)var10, (double)var12, (double)var10);
+            var241.func_78377_a((double)(-var10), (double)var12, (double)var10);
+            var241.func_78377_a((double)(-var10), (double)var12, (double)(-var10));
+            var241.func_78377_a((double)var10, (double)var12, (double)(-var10));
+            var241.func_78377_a((double)var10, (double)var11, (double)(-var10));
+            var241.func_78377_a((double)(-var10), (double)var11, (double)(-var10));
+            var241.func_78377_a((double)var10, (double)var12, (double)(-var10));
+            var241.func_78377_a((double)var10, (double)var12, (double)var10);
+            var241.func_78377_a((double)var10, (double)var11, (double)var10);
+            var241.func_78377_a((double)var10, (double)var11, (double)(-var10));
+            var241.func_78377_a((double)(-var10), (double)var11, (double)(-var10));
+            var241.func_78377_a((double)(-var10), (double)var11, (double)var10);
+            var241.func_78377_a((double)(-var10), (double)var12, (double)var10);
+            var241.func_78377_a((double)(-var10), (double)var12, (double)(-var10));
+            var241.func_78377_a((double)(-var10), (double)var12, (double)(-var10));
+            var241.func_78377_a((double)(-var10), (double)var12, (double)var10);
+            var241.func_78377_a((double)var10, (double)var12, (double)var10);
+            var241.func_78377_a((double)var10, (double)var12, (double)(-var10));
+            var241.func_78381_a();
+         }
+
+         if(this.field_72769_h.field_73011_w.func_76561_g()) {
+            GL11.glColor3f(var231 * 0.2F + 0.04F, var4 * 0.2F + 0.04F, var5 * 0.6F + 0.1F);
+         } else {
+            GL11.glColor3f(var231, var4, var5);
+         }
+
+         if(this.field_72777_q.field_71474_y.field_151451_c <= 4) {
+            GL11.glColor3f(this.field_72777_q.field_71460_t.field_78518_n, this.field_72777_q.field_71460_t.field_78519_o, this.field_72777_q.field_71460_t.field_78533_p);
+         }
+
+         GL11.glPushMatrix();
+         GL11.glTranslatef(0.0F, -((float)(var28 - 16.0D)), 0.0F);
+         if(Config.isSkyEnabled()) {
+            GL11.glCallList(this.field_72781_x);
+         }
+
+         GL11.glPopMatrix();
+         GL11.glEnable(3553);
+         GL11.glDepthMask(true);
+      }
+
+   }
+
+   public void func_72718_b(float par1) {
+      if(!Config.isCloudsOff()) {
+         if(Reflector.ForgeWorldProvider_getCloudRenderer.exists()) {
+            WorldProvider partialTicks = this.field_72777_q.field_71441_e.field_73011_w;
+            Object var2 = Reflector.call(partialTicks, Reflector.ForgeWorldProvider_getCloudRenderer, new Object[0]);
+            if(var2 != null) {
+               Reflector.callVoid(var2, Reflector.IRenderHandler_render, new Object[]{Float.valueOf(par1), this.field_72769_h, this.field_72777_q});
+               return;
+            }
+         }
+
+         if(this.field_72777_q.field_71441_e.field_73011_w.func_76569_d()) {
+            if(Config.isCloudsFancy()) {
+               this.func_72736_c(par1);
+            } else {
+               float partialTicks1 = par1;
+               par1 = 0.0F;
+               GL11.glDisable(2884);
+               float var21 = (float)(this.field_72777_q.field_71451_h.field_70137_T + (this.field_72777_q.field_71451_h.field_70163_u - this.field_72777_q.field_71451_h.field_70137_T) * (double)par1);
+               byte var3 = 32;
+               int var4 = 256 / var3;
+               Tessellator var5 = Tessellator.field_78398_a;
+               this.field_72770_i.func_110577_a(field_110925_j);
+               GL11.glEnable(3042);
+               OpenGlHelper.func_148821_a(770, 771, 1, 0);
+               double dc;
+               double exactPlayerZ1;
+               if(this.isFancyGlListClouds || this.field_72773_u >= this.cloudTickCounterGlList + 20) {
+                  GL11.glNewList(this.glListClouds, 4864);
+                  Vec3 entityliving = this.field_72769_h.func_72824_f(par1);
+                  float exactPlayerX = (float)entityliving.field_72450_a;
+                  float var8 = (float)entityliving.field_72448_b;
+                  float exactPlayerY = (float)entityliving.field_72449_c;
+                  float var10;
+                  if(this.field_72777_q.field_71474_y.field_74337_g) {
+                     var10 = (exactPlayerX * 30.0F + var8 * 59.0F + exactPlayerY * 11.0F) / 100.0F;
+                     float exactPlayerZ = (exactPlayerX * 30.0F + var8 * 70.0F) / 100.0F;
+                     float var12 = (exactPlayerX * 30.0F + exactPlayerY * 70.0F) / 100.0F;
+                     exactPlayerX = var10;
+                     var8 = exactPlayerZ;
+                     exactPlayerY = var12;
+                  }
+
+                  var10 = 4.8828125E-4F;
+                  exactPlayerZ1 = (double)((float)this.field_72773_u + par1);
+                  dc = this.field_72777_q.field_71451_h.field_70169_q + (this.field_72777_q.field_71451_h.field_70165_t - this.field_72777_q.field_71451_h.field_70169_q) * (double)par1 + exactPlayerZ1 * 0.029999999329447746D;
+                  double cdx = this.field_72777_q.field_71451_h.field_70166_s + (this.field_72777_q.field_71451_h.field_70161_v - this.field_72777_q.field_71451_h.field_70166_s) * (double)par1;
+                  int cdz = MathHelper.func_76128_c(dc / 2048.0D);
+                  int var18 = MathHelper.func_76128_c(cdx / 2048.0D);
+                  dc -= (double)(cdz * 2048);
+                  cdx -= (double)(var18 * 2048);
+                  float var19 = this.field_72769_h.field_73011_w.func_76571_f() - var21 + 0.33F;
+                  var19 += this.field_72777_q.field_71474_y.ofCloudsHeight * 128.0F;
+                  float var20 = (float)(dc * (double)var10);
+                  float var21 = (float)(cdx * (double)var10);
+                  var5.func_78382_b();
+                  var5.func_78369_a(exactPlayerX, var8, exactPlayerY, 0.8F);
+
+                  for(int var22 = -var3 * var4; var22 < var3 * var4; var22 += var3) {
+                     for(int var23 = -var3 * var4; var23 < var3 * var4; var23 += var3) {
+                        var5.func_78374_a((double)(var22 + 0), (double)var19, (double)(var23 + var3), (double)((float)(var22 + 0) * var10 + var20), (double)((float)(var23 + var3) * var10 + var21));
+                        var5.func_78374_a((double)(var22 + var3), (double)var19, (double)(var23 + var3), (double)((float)(var22 + var3) * var10 + var20), (double)((float)(var23 + var3) * var10 + var21));
+                        var5.func_78374_a((double)(var22 + var3), (double)var19, (double)(var23 + 0), (double)((float)(var22 + var3) * var10 + var20), (double)((float)(var23 + 0) * var10 + var21));
+                        var5.func_78374_a((double)(var22 + 0), (double)var19, (double)(var23 + 0), (double)((float)(var22 + 0) * var10 + var20), (double)((float)(var23 + 0) * var10 + var21));
+                     }
+                  }
+
+                  var5.func_78381_a();
+                  GL11.glEndList();
+                  this.isFancyGlListClouds = false;
+                  this.cloudTickCounterGlList = this.field_72773_u;
+                  this.cloudPlayerX = this.field_72777_q.field_71451_h.field_70169_q;
+                  this.cloudPlayerY = this.field_72777_q.field_71451_h.field_70167_r;
+                  this.cloudPlayerZ = this.field_72777_q.field_71451_h.field_70166_s;
+               }
+
+               EntityLivingBase entityliving1 = this.field_72777_q.field_71451_h;
+               double exactPlayerX1 = entityliving1.field_70169_q + (entityliving1.field_70165_t - entityliving1.field_70169_q) * (double)partialTicks1;
+               double exactPlayerY1 = entityliving1.field_70167_r + (entityliving1.field_70163_u - entityliving1.field_70167_r) * (double)partialTicks1;
+               exactPlayerZ1 = entityliving1.field_70166_s + (entityliving1.field_70161_v - entityliving1.field_70166_s) * (double)partialTicks1;
+               dc = (double)((float)(this.field_72773_u - this.cloudTickCounterGlList) + partialTicks1);
+               float cdx1 = (float)(exactPlayerX1 - this.cloudPlayerX + dc * 0.03D);
+               float cdy = (float)(exactPlayerY1 - this.cloudPlayerY);
+               float cdz1 = (float)(exactPlayerZ1 - this.cloudPlayerZ);
+               GL11.glTranslatef(-cdx1, -cdy, -cdz1);
+               GL11.glCallList(this.glListClouds);
+               GL11.glTranslatef(cdx1, cdy, cdz1);
+               GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+               GL11.glDisable(3042);
+               GL11.glEnable(2884);
+            }
+         }
+
+      }
+   }
+
+   public boolean func_72721_a(double par1, double par3, double par5, float par7) {
+      return false;
+   }
+
+   public void func_72736_c(float par1) {
+      float partialTicks = par1;
+      par1 = 0.0F;
+      GL11.glDisable(2884);
+      float var2 = (float)(this.field_72777_q.field_71451_h.field_70137_T + (this.field_72777_q.field_71451_h.field_70163_u - this.field_72777_q.field_71451_h.field_70137_T) * (double)par1);
+      Tessellator var3 = Tessellator.field_78398_a;
+      float var4 = 12.0F;
+      float var5 = 4.0F;
+      double var6 = (double)((float)this.field_72773_u + par1);
+      double var8 = (this.field_72777_q.field_71451_h.field_70169_q + (this.field_72777_q.field_71451_h.field_70165_t - this.field_72777_q.field_71451_h.field_70169_q) * (double)par1 + var6 * 0.029999999329447746D) / (double)var4;
+      double var10 = (this.field_72777_q.field_71451_h.field_70166_s + (this.field_72777_q.field_71451_h.field_70161_v - this.field_72777_q.field_71451_h.field_70166_s) * (double)par1) / (double)var4 + 0.33000001311302185D;
+      float var12 = this.field_72769_h.field_73011_w.func_76571_f() - var2 + 0.33F;
+      var12 += this.field_72777_q.field_71474_y.ofCloudsHeight * 128.0F;
+      int var13 = MathHelper.func_76128_c(var8 / 2048.0D);
+      int var14 = MathHelper.func_76128_c(var10 / 2048.0D);
+      var8 -= (double)(var13 * 2048);
+      var10 -= (double)(var14 * 2048);
+      this.field_72770_i.func_110577_a(field_110925_j);
+      GL11.glEnable(3042);
+      OpenGlHelper.func_148821_a(770, 771, 1, 0);
+      float cdz;
+      if(!this.isFancyGlListClouds || this.field_72773_u >= this.cloudTickCounterGlList + 20) {
+         GL11.glNewList(this.glListClouds, 4864);
+         Vec3 entityliving = this.field_72769_h.func_72824_f(par1);
+         float exactPlayerX = (float)entityliving.field_72450_a;
+         float var17 = (float)entityliving.field_72448_b;
+         float exactPlayerY = (float)entityliving.field_72449_c;
+         float var19;
+         float exactPlayerZ;
+         float var21;
+         if(this.field_72777_q.field_71474_y.field_74337_g) {
+            var19 = (exactPlayerX * 30.0F + var17 * 59.0F + exactPlayerY * 11.0F) / 100.0F;
+            exactPlayerZ = (exactPlayerX * 30.0F + var17 * 70.0F) / 100.0F;
+            var21 = (exactPlayerX * 30.0F + exactPlayerY * 70.0F) / 100.0F;
+            exactPlayerX = var19;
+            var17 = exactPlayerZ;
+            exactPlayerY = var21;
+         }
+
+         var19 = (float)(var8 * 0.0D);
+         exactPlayerZ = (float)(var10 * 0.0D);
+         var21 = 0.00390625F;
+         var19 = (float)MathHelper.func_76128_c(var8) * var21;
+         exactPlayerZ = (float)MathHelper.func_76128_c(var10) * var21;
+         float dc = (float)(var8 - (double)MathHelper.func_76128_c(var8));
+         float var23 = (float)(var10 - (double)MathHelper.func_76128_c(var10));
+         byte cdx = 8;
+         byte cdy = 4;
+         cdz = 9.765625E-4F;
+         GL11.glScalef(var4, 1.0F, var4);
+
+         for(int var27 = 0; var27 < 2; ++var27) {
+            if(var27 == 0) {
+               GL11.glColorMask(false, false, false, false);
+            } else if(this.field_72777_q.field_71474_y.field_74337_g) {
+               if(EntityRenderer.field_78515_b == 0) {
+                  GL11.glColorMask(false, true, true, true);
+               } else {
+                  GL11.glColorMask(true, false, false, true);
+               }
+            } else {
+               GL11.glColorMask(true, true, true, true);
+            }
+
+            for(int var28 = -cdy + 1; var28 <= cdy; ++var28) {
+               for(int var29 = -cdy + 1; var29 <= cdy; ++var29) {
+                  var3.func_78382_b();
+                  float var30 = (float)(var28 * cdx);
+                  float var31 = (float)(var29 * cdx);
+                  float var32 = var30 - dc;
+                  float var33 = var31 - var23;
+                  if(var12 > -var5 - 1.0F) {
+                     var3.func_78369_a(exactPlayerX * 0.7F, var17 * 0.7F, exactPlayerY * 0.7F, 0.8F);
+                     var3.func_78375_b(0.0F, -1.0F, 0.0F);
+                     var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + 0.0F), (double)(var33 + (float)cdx), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                     var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + 0.0F), (double)(var33 + (float)cdx), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                     var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + 0.0F), (double)(var33 + 0.0F), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                     var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + 0.0F), (double)(var33 + 0.0F), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                  }
+
+                  if(var12 <= var5 + 1.0F) {
+                     var3.func_78369_a(exactPlayerX, var17, exactPlayerY, 0.8F);
+                     var3.func_78375_b(0.0F, 1.0F, 0.0F);
+                     var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + var5 - cdz), (double)(var33 + (float)cdx), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                     var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + var5 - cdz), (double)(var33 + (float)cdx), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                     var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + var5 - cdz), (double)(var33 + 0.0F), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                     var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + var5 - cdz), (double)(var33 + 0.0F), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                  }
+
+                  var3.func_78369_a(exactPlayerX * 0.9F, var17 * 0.9F, exactPlayerY * 0.9F, 0.8F);
+                  int var34;
+                  if(var28 > -1) {
+                     var3.func_78375_b(-1.0F, 0.0F, 0.0F);
+
+                     for(var34 = 0; var34 < cdx; ++var34) {
+                        var3.func_78374_a((double)(var32 + (float)var34 + 0.0F), (double)(var12 + 0.0F), (double)(var33 + (float)cdx), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)var34 + 0.0F), (double)(var12 + var5), (double)(var33 + (float)cdx), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)var34 + 0.0F), (double)(var12 + var5), (double)(var33 + 0.0F), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)var34 + 0.0F), (double)(var12 + 0.0F), (double)(var33 + 0.0F), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                     }
+                  }
+
+                  if(var28 <= 1) {
+                     var3.func_78375_b(1.0F, 0.0F, 0.0F);
+
+                     for(var34 = 0; var34 < cdx; ++var34) {
+                        var3.func_78374_a((double)(var32 + (float)var34 + 1.0F - cdz), (double)(var12 + 0.0F), (double)(var33 + (float)cdx), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)var34 + 1.0F - cdz), (double)(var12 + var5), (double)(var33 + (float)cdx), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + (float)cdx) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)var34 + 1.0F - cdz), (double)(var12 + var5), (double)(var33 + 0.0F), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)var34 + 1.0F - cdz), (double)(var12 + 0.0F), (double)(var33 + 0.0F), (double)((var30 + (float)var34 + 0.5F) * var21 + var19), (double)((var31 + 0.0F) * var21 + exactPlayerZ));
+                     }
+                  }
+
+                  var3.func_78369_a(exactPlayerX * 0.8F, var17 * 0.8F, exactPlayerY * 0.8F, 0.8F);
+                  if(var29 > -1) {
+                     var3.func_78375_b(0.0F, 0.0F, -1.0F);
+
+                     for(var34 = 0; var34 < cdx; ++var34) {
+                        var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + var5), (double)(var33 + (float)var34 + 0.0F), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + var5), (double)(var33 + (float)var34 + 0.0F), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + 0.0F), (double)(var33 + (float)var34 + 0.0F), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + 0.0F), (double)(var33 + (float)var34 + 0.0F), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                     }
+                  }
+
+                  if(var29 <= 1) {
+                     var3.func_78375_b(0.0F, 0.0F, 1.0F);
+
+                     for(var34 = 0; var34 < cdx; ++var34) {
+                        var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + var5), (double)(var33 + (float)var34 + 1.0F - cdz), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + var5), (double)(var33 + (float)var34 + 1.0F - cdz), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + (float)cdx), (double)(var12 + 0.0F), (double)(var33 + (float)var34 + 1.0F - cdz), (double)((var30 + (float)cdx) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                        var3.func_78374_a((double)(var32 + 0.0F), (double)(var12 + 0.0F), (double)(var33 + (float)var34 + 1.0F - cdz), (double)((var30 + 0.0F) * var21 + var19), (double)((var31 + (float)var34 + 0.5F) * var21 + exactPlayerZ));
+                     }
+                  }
+
+                  var3.func_78381_a();
+               }
+            }
+         }
+
+         GL11.glEndList();
+         this.isFancyGlListClouds = true;
+         this.cloudTickCounterGlList = this.field_72773_u;
+         this.cloudPlayerX = this.field_72777_q.field_71451_h.field_70169_q;
+         this.cloudPlayerY = this.field_72777_q.field_71451_h.field_70167_r;
+         this.cloudPlayerZ = this.field_72777_q.field_71451_h.field_70166_s;
+      }
+
+      EntityLivingBase var36 = this.field_72777_q.field_71451_h;
+      double var37 = var36.field_70169_q + (var36.field_70165_t - var36.field_70169_q) * (double)partialTicks;
+      double var38 = var36.field_70167_r + (var36.field_70163_u - var36.field_70167_r) * (double)partialTicks;
+      double var39 = var36.field_70166_s + (var36.field_70161_v - var36.field_70166_s) * (double)partialTicks;
+      double var40 = (double)((float)(this.field_72773_u - this.cloudTickCounterGlList) + partialTicks);
+      float var41 = (float)(var37 - this.cloudPlayerX + var40 * 0.03D);
+      float var42 = (float)(var38 - this.cloudPlayerY);
+      cdz = (float)(var39 - this.cloudPlayerZ);
+      GL11.glTranslatef(-var41, -var42, -cdz);
+      GL11.glCallList(this.glListClouds);
+      GL11.glTranslatef(var41, var42, cdz);
+      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+      GL11.glDisable(3042);
+      GL11.glEnable(2884);
+   }
+
+   public boolean func_72716_a(EntityLivingBase entityliving, boolean flag) {
+      this.renderViewEntity = entityliving;
+      if(WrUpdates.hasWrUpdater()) {
+         return WrUpdates.updateRenderers(this, entityliving, flag);
+      } else if(this.field_72767_j.size() <= 0) {
+         return false;
+      } else {
+         int num = 0;
+         int maxNum = Config.getUpdatesPerFrame();
+         if(Config.isDynamicUpdates() && !this.isMoving(entityliving)) {
+            maxNum *= 3;
+         }
+
+         byte NOT_IN_FRUSTRUM_MUL = 4;
+         int numValid = 0;
+         WorldRenderer wrBest = null;
+         float distSqBest = Float.MAX_VALUE;
+         int indexBest = -1;
+
+         for(int maxDiffDistSq = 0; maxDiffDistSq < this.field_72767_j.size(); ++maxDiffDistSq) {
+            WorldRenderer i = (WorldRenderer)this.field_72767_j.get(maxDiffDistSq);
+            if(i != null) {
+               ++numValid;
+               if(!i.field_78939_q) {
+                  this.field_72767_j.set(maxDiffDistSq, (Object)null);
+               } else {
+                  float wr = i.func_78912_a(entityliving);
+                  if(wr <= 256.0F && this.isActingNow()) {
+                     i.func_147892_a(entityliving);
+                     i.field_78939_q = false;
+                     this.field_72767_j.set(maxDiffDistSq, (Object)null);
+                     ++num;
+                  } else {
+                     if(wr > 256.0F && num >= maxNum) {
+                        break;
+                     }
+
+                     if(!i.field_78927_l) {
+                        wr *= (float)NOT_IN_FRUSTRUM_MUL;
+                     }
+
+                     if(wrBest == null) {
+                        wrBest = i;
+                        distSqBest = wr;
+                        indexBest = maxDiffDistSq;
+                     } else if(wr < distSqBest) {
+                        wrBest = i;
+                        distSqBest = wr;
+                        indexBest = maxDiffDistSq;
+                     }
+                  }
+               }
+            }
+         }
+
+         if(wrBest != null) {
+            wrBest.func_147892_a(entityliving);
+            wrBest.field_78939_q = false;
+            this.field_72767_j.set(indexBest, (Object)null);
+            ++num;
+            float var15 = distSqBest / 5.0F;
+
+            for(int var16 = 0; var16 < this.field_72767_j.size() && num < maxNum; ++var16) {
+               WorldRenderer var17 = (WorldRenderer)this.field_72767_j.get(var16);
+               if(var17 != null) {
+                  float distSq = var17.func_78912_a(entityliving);
+                  if(!var17.field_78927_l) {
+                     distSq *= (float)NOT_IN_FRUSTRUM_MUL;
+                  }
+
+                  float diffDistSq = Math.abs(distSq - distSqBest);
+                  if(diffDistSq < var15) {
+                     var17.func_147892_a(entityliving);
+                     var17.field_78939_q = false;
+                     this.field_72767_j.set(var16, (Object)null);
+                     ++num;
+                  }
+               }
+            }
+         }
+
+         if(numValid == 0) {
+            this.field_72767_j.clear();
+         }
+
+         this.field_72767_j.compact();
+         return true;
+      }
+   }
+
+   public void func_72717_a(Tessellator par1Tessellator, EntityPlayer par2EntityPlayer, float par3) {
+      this.drawBlockDamageTexture(par1Tessellator, par2EntityPlayer, par3);
+   }
+
+   public void drawBlockDamageTexture(Tessellator par1Tessellator, EntityLivingBase par2EntityPlayer, float par3) {
+      double var4 = par2EntityPlayer.field_70142_S + (par2EntityPlayer.field_70165_t - par2EntityPlayer.field_70142_S) * (double)par3;
+      double var6 = par2EntityPlayer.field_70137_T + (par2EntityPlayer.field_70163_u - par2EntityPlayer.field_70137_T) * (double)par3;
+      double var8 = par2EntityPlayer.field_70136_U + (par2EntityPlayer.field_70161_v - par2EntityPlayer.field_70136_U) * (double)par3;
+      if(!this.field_72738_E.isEmpty()) {
+         OpenGlHelper.func_148821_a(774, 768, 1, 0);
+         this.field_72770_i.func_110577_a(TextureMap.field_110575_b);
+         GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+         GL11.glPushMatrix();
+         GL11.glPolygonOffset(-3.0F, -3.0F);
+         GL11.glEnable('\u8037');
+         GL11.glAlphaFunc(516, 0.1F);
+         GL11.glEnable(3008);
+         par1Tessellator.func_78382_b();
+         par1Tessellator.func_78373_b(-var4, -var6, -var8);
+         par1Tessellator.func_78383_c();
+         Iterator var10 = this.field_72738_E.values().iterator();
+
+         while(var10.hasNext()) {
+            DestroyBlockProgress var11 = (DestroyBlockProgress)var10.next();
+            double var12 = (double)var11.func_73110_b() - var4;
+            double var14 = (double)var11.func_73109_c() - var6;
+            double var16 = (double)var11.func_73108_d() - var8;
+            if(var12 * var12 + var14 * var14 + var16 * var16 > 1024.0D) {
+               var10.remove();
+            } else {
+               Block var18 = this.field_72769_h.func_147439_a(var11.func_73110_b(), var11.func_73109_c(), var11.func_73108_d());
+               if(var18.func_149688_o() != Material.field_151579_a) {
+                  this.field_147592_B.func_147792_a(var18, var11.func_73110_b(), var11.func_73109_c(), var11.func_73108_d(), this.field_94141_F[var11.func_73106_e()]);
+               }
+            }
+         }
+
+         par1Tessellator.func_78381_a();
+         par1Tessellator.func_78373_b(0.0D, 0.0D, 0.0D);
+         GL11.glDisable(3008);
+         GL11.glPolygonOffset(0.0F, 0.0F);
+         GL11.glDisable('\u8037');
+         GL11.glEnable(3008);
+         GL11.glDepthMask(true);
+         GL11.glPopMatrix();
+      }
+
+   }
+
+   public void func_72731_b(EntityPlayer par1EntityPlayer, MovingObjectPosition par2MovingObjectPosition, int par3, float par4) {
+      if(par3 == 0 && par2MovingObjectPosition.field_72313_a == MovingObjectPosition.MovingObjectType.BLOCK) {
+         GL11.glEnable(3042);
+         OpenGlHelper.func_148821_a(770, 771, 1, 0);
+         GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
+         GL11.glLineWidth(2.0F);
+         GL11.glDisable(3553);
+         GL11.glDepthMask(false);
+         float var5 = 0.002F;
+         Block var6 = this.field_72769_h.func_147439_a(par2MovingObjectPosition.field_72311_b, par2MovingObjectPosition.field_72312_c, par2MovingObjectPosition.field_72309_d);
+         if(var6.func_149688_o() != Material.field_151579_a) {
+            var6.func_149719_a(this.field_72769_h, par2MovingObjectPosition.field_72311_b, par2MovingObjectPosition.field_72312_c, par2MovingObjectPosition.field_72309_d);
+            double var7 = par1EntityPlayer.field_70142_S + (par1EntityPlayer.field_70165_t - par1EntityPlayer.field_70142_S) * (double)par4;
+            double var9 = par1EntityPlayer.field_70137_T + (par1EntityPlayer.field_70163_u - par1EntityPlayer.field_70137_T) * (double)par4;
+            double var11 = par1EntityPlayer.field_70136_U + (par1EntityPlayer.field_70161_v - par1EntityPlayer.field_70136_U) * (double)par4;
+            func_147590_a(var6.func_149633_g(this.field_72769_h, par2MovingObjectPosition.field_72311_b, par2MovingObjectPosition.field_72312_c, par2MovingObjectPosition.field_72309_d).func_72314_b((double)var5, (double)var5, (double)var5).func_72325_c(-var7, -var9, -var11), -1);
+         }
+
+         GL11.glDepthMask(true);
+         GL11.glEnable(3553);
+         GL11.glDisable(3042);
+      }
+
+   }
+
+   public static void func_147590_a(AxisAlignedBB p_147590_0_, int p_147590_1_) {
+      Tessellator var2 = Tessellator.field_78398_a;
+      var2.func_78371_b(3);
+      if(p_147590_1_ != -1) {
+         var2.func_78378_d(p_147590_1_);
+      }
+
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72338_b, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72338_b, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72338_b, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72338_b, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72338_b, p_147590_0_.field_72339_c);
+      var2.func_78381_a();
+      var2.func_78371_b(3);
+      if(p_147590_1_ != -1) {
+         var2.func_78378_d(p_147590_1_);
+      }
+
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72337_e, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72337_e, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72337_e, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72337_e, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72337_e, p_147590_0_.field_72339_c);
+      var2.func_78381_a();
+      var2.func_78371_b(1);
+      if(p_147590_1_ != -1) {
+         var2.func_78378_d(p_147590_1_);
+      }
+
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72338_b, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72337_e, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72338_b, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72337_e, p_147590_0_.field_72339_c);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72338_b, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72336_d, p_147590_0_.field_72337_e, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72338_b, p_147590_0_.field_72334_f);
+      var2.func_78377_a(p_147590_0_.field_72340_a, p_147590_0_.field_72337_e, p_147590_0_.field_72334_f);
+      var2.func_78381_a();
+   }
+
+   public void func_72725_b(int par1, int par2, int par3, int par4, int par5, int par6) {
+      int var7 = MathHelper.func_76137_a(par1, 16);
+      int var8 = MathHelper.func_76137_a(par2, 16);
+      int var9 = MathHelper.func_76137_a(par3, 16);
+      int var10 = MathHelper.func_76137_a(par4, 16);
+      int var11 = MathHelper.func_76137_a(par5, 16);
+      int var12 = MathHelper.func_76137_a(par6, 16);
+
+      for(int var13 = var7; var13 <= var10; ++var13) {
+         int var14 = var13 % this.field_72766_m;
+         if(var14 < 0) {
+            var14 += this.field_72766_m;
+         }
+
+         for(int var15 = var8; var15 <= var11; ++var15) {
+            int var16 = var15 % this.field_72763_n;
+            if(var16 < 0) {
+               var16 += this.field_72763_n;
+            }
+
+            for(int var17 = var9; var17 <= var12; ++var17) {
+               int var18 = var17 % this.field_72764_o;
+               if(var18 < 0) {
+                  var18 += this.field_72764_o;
+               }
+
+               int var19 = (var18 * this.field_72763_n + var16) * this.field_72766_m + var14;
+               WorldRenderer var20 = this.field_72765_l[var19];
+               if(var20 != null && !var20.field_78939_q) {
+                  this.field_72767_j.add(var20);
+                  var20.func_78914_f();
+               }
+            }
+         }
+      }
+
+   }
+
+   public void func_147586_a(int p_147586_1_, int p_147586_2_, int p_147586_3_) {
+      this.func_72725_b(p_147586_1_ - 1, p_147586_2_ - 1, p_147586_3_ - 1, p_147586_1_ + 1, p_147586_2_ + 1, p_147586_3_ + 1);
+   }
+
+   public void func_147588_b(int p_147588_1_, int p_147588_2_, int p_147588_3_) {
+      this.func_72725_b(p_147588_1_ - 1, p_147588_2_ - 1, p_147588_3_ - 1, p_147588_1_ + 1, p_147588_2_ + 1, p_147588_3_ + 1);
+   }
+
+   public void func_147585_a(int p_147585_1_, int p_147585_2_, int p_147585_3_, int p_147585_4_, int p_147585_5_, int p_147585_6_) {
+      this.func_72725_b(p_147585_1_ - 1, p_147585_2_ - 1, p_147585_3_ - 1, p_147585_4_ + 1, p_147585_5_ + 1, p_147585_6_ + 1);
+   }
+
+   public void func_72729_a(ICamera par1ICamera, float par2) {
+      boolean checkDistanceXz = !Config.isFogOff();
+      double renderDistSq = (double)(this.field_72739_F * 16 * this.field_72739_F * 16);
+
+      for(int var3 = 0; var3 < this.countSortedWorldRenderers; ++var3) {
+         WorldRenderer wr = this.field_72768_k[var3];
+         if(!wr.func_78906_e()) {
+            if(checkDistanceXz && wr.distanceToEntityXzSq > renderDistSq) {
+               wr.field_78927_l = false;
+            } else {
+               wr.func_78908_a(par1ICamera);
+            }
+         }
+      }
+
+   }
+
+   public void func_72702_a(String par1Str, int par2, int par3, int par4) {
+      ChunkCoordinates var5 = new ChunkCoordinates(par2, par3, par4);
+      ISound var6 = (ISound)this.field_147593_P.get(var5);
+      if(var6 != null) {
+         this.field_72777_q.func_147118_V().func_147683_b(var6);
+         this.field_147593_P.remove(var5);
+      }
+
+      if(par1Str != null) {
+         ItemRecord var7 = ItemRecord.func_150926_b(par1Str);
+         if(var7 != null) {
+            this.field_72777_q.field_71456_v.func_73833_a(var7.func_150927_i());
+         }
+
+         ResourceLocation resource = null;
+         if(Reflector.ForgeItemRecord_getRecordResource.exists() && var7 != null) {
+            resource = (ResourceLocation)Reflector.call(var7, Reflector.ForgeItemRecord_getRecordResource, new Object[]{par1Str});
+         }
+
+         if(resource == null) {
+            resource = new ResourceLocation(par1Str);
+         }
+
+         PositionedSoundRecord var8 = PositionedSoundRecord.func_147675_a(resource, (float)par2, (float)par3, (float)par4);
+         this.field_147593_P.put(var5, var8);
+         this.field_72777_q.func_147118_V().func_147682_a(var8);
+      }
+
+   }
+
+   public void func_72704_a(String par1Str, double par2, double par4, double par6, float par8, float par9) {}
+
+   public void func_85102_a(EntityPlayer par1EntityPlayer, String par2Str, double par3, double par5, double par7, float par9, float par10) {}
+
+   public void func_72708_a(String par1Str, final double par2, final double par4, final double par6, double par8, double par10, double par12) {
+      try {
+         this.func_72726_b(par1Str, par2, par4, par6, par8, par10, par12);
+      } catch (Throwable var17) {
+         CrashReport var15 = CrashReport.func_85055_a(var17, "Exception while adding particle");
+         CrashReportCategory var16 = var15.func_85058_a("Particle being added");
+         var16.func_71507_a("Name", par1Str);
+         var16.func_71500_a("Position", new Callable() {
+
+            private static final String __OBFID = "CL_00000955";
+            private static final String __OBFID = "CL_00000955";
+
+            public String call() {
+               return CrashReportCategory.func_85074_a(par2, par4, par6);
+            }
+            // $FF: synthetic method
+            // $FF: bridge method
+            public Object call() throws Exception {
+               return this.call();
+            }
+         });
+         throw new ReportedException(var15);
+      }
+   }
+
+   public EntityFX func_72726_b(String par1Str, double par2, double par4, double par6, double par8, double par10, double par12) {
+      if(this.field_72777_q != null && this.field_72777_q.field_71451_h != null && this.field_72777_q.field_71452_i != null) {
+         int var14 = this.field_72777_q.field_71474_y.field_74362_aa;
+         if(var14 == 1 && this.field_72769_h.field_73012_v.nextInt(3) == 0) {
+            var14 = 2;
+         }
+
+         double var15 = this.field_72777_q.field_71451_h.field_70165_t - par2;
+         double var17 = this.field_72777_q.field_71451_h.field_70163_u - par4;
+         double var19 = this.field_72777_q.field_71451_h.field_70161_v - par6;
+         Object var21 = null;
+         if(par1Str.equals("hugeexplosion")) {
+            if(Config.isAnimatedExplosion()) {
+               this.field_72777_q.field_71452_i.func_78873_a(var21 = new EntityHugeExplodeFX(this.field_72769_h, par2, par4, par6, par8, par10, par12));
+            }
+         } else if(par1Str.equals("largeexplode")) {
+            if(Config.isAnimatedExplosion()) {
+               this.field_72777_q.field_71452_i.func_78873_a(var21 = new EntityLargeExplodeFX(this.field_72770_i, this.field_72769_h, par2, par4, par6, par8, par10, par12));
+            }
+         } else if(par1Str.equals("fireworksSpark")) {
+            this.field_72777_q.field_71452_i.func_78873_a(var21 = new EntityFireworkSparkFX(this.field_72769_h, par2, par4, par6, par8, par10, par12, this.field_72777_q.field_71452_i));
+         }
+
+         if(var21 != null) {
+            return (EntityFX)var21;
+         } else {
+            double var22 = 16.0D;
+            double d3 = 16.0D;
+            if(par1Str.equals("crit")) {
+               var22 = 196.0D;
+            }
+
+            if(var15 * var15 + var17 * var17 + var19 * var19 > var22 * var22) {
+               return null;
+            } else if(var14 > 1) {
+               return null;
+            } else {
+               if(par1Str.equals("bubble")) {
+                  var21 = new EntityBubbleFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  CustomColorizer.updateWaterFX((EntityFX)var21, this.field_72769_h);
+               } else if(par1Str.equals("suspended")) {
+                  if(Config.isWaterParticles()) {
+                     var21 = new EntitySuspendFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  }
+               } else if(par1Str.equals("depthsuspend")) {
+                  if(Config.isVoidParticles()) {
+                     var21 = new EntityAuraFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  }
+               } else if(par1Str.equals("townaura")) {
+                  var21 = new EntityAuraFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  CustomColorizer.updateMyceliumFX((EntityFX)var21);
+               } else if(par1Str.equals("crit")) {
+                  var21 = new EntityCritFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("magicCrit")) {
+                  var21 = new EntityCritFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  ((EntityFX)var21).func_70538_b(((EntityFX)var21).func_70534_d() * 0.3F, ((EntityFX)var21).func_70542_f() * 0.8F, ((EntityFX)var21).func_70535_g());
+                  ((EntityFX)var21).func_94053_h();
+               } else if(par1Str.equals("smoke")) {
+                  if(Config.isAnimatedSmoke()) {
+                     var21 = new EntitySmokeFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  }
+               } else if(par1Str.equals("mobSpell")) {
+                  if(Config.isPotionParticles()) {
+                     var21 = new EntitySpellParticleFX(this.field_72769_h, par2, par4, par6, 0.0D, 0.0D, 0.0D);
+                     ((EntityFX)var21).func_70538_b((float)par8, (float)par10, (float)par12);
+                  }
+               } else if(par1Str.equals("mobSpellAmbient")) {
+                  if(Config.isPotionParticles()) {
+                     var21 = new EntitySpellParticleFX(this.field_72769_h, par2, par4, par6, 0.0D, 0.0D, 0.0D);
+                     ((EntityFX)var21).func_82338_g(0.15F);
+                     ((EntityFX)var21).func_70538_b((float)par8, (float)par10, (float)par12);
+                  }
+               } else if(par1Str.equals("spell")) {
+                  if(Config.isPotionParticles()) {
+                     var21 = new EntitySpellParticleFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  }
+               } else if(par1Str.equals("instantSpell")) {
+                  if(Config.isPotionParticles()) {
+                     var21 = new EntitySpellParticleFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                     ((EntitySpellParticleFX)var21).func_70589_b(144);
+                  }
+               } else if(par1Str.equals("witchMagic")) {
+                  if(Config.isPotionParticles()) {
+                     var21 = new EntitySpellParticleFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                     ((EntitySpellParticleFX)var21).func_70589_b(144);
+                     float var26 = this.field_72769_h.field_73012_v.nextFloat() * 0.5F + 0.35F;
+                     ((EntityFX)var21).func_70538_b(1.0F * var26, 0.0F * var26, 1.0F * var26);
+                  }
+               } else if(par1Str.equals("note")) {
+                  var21 = new EntityNoteFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("portal")) {
+                  if(Config.isPortalParticles()) {
+                     var21 = new EntityPortalFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                     CustomColorizer.updatePortalFX((EntityFX)var21);
+                  }
+               } else if(par1Str.equals("enchantmenttable")) {
+                  var21 = new EntityEnchantmentTableParticleFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("explode")) {
+                  if(Config.isAnimatedExplosion()) {
+                     var21 = new EntityExplodeFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  }
+               } else if(par1Str.equals("flame")) {
+                  if(Config.isAnimatedFlame()) {
+                     var21 = new EntityFlameFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  }
+               } else if(par1Str.equals("lava")) {
+                  var21 = new EntityLavaFX(this.field_72769_h, par2, par4, par6);
+               } else if(par1Str.equals("footstep")) {
+                  var21 = new EntityFootStepFX(this.field_72770_i, this.field_72769_h, par2, par4, par6);
+               } else if(par1Str.equals("splash")) {
+                  var21 = new EntitySplashFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  CustomColorizer.updateWaterFX((EntityFX)var21, this.field_72769_h);
+               } else if(par1Str.equals("wake")) {
+                  var21 = new EntityFishWakeFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("largesmoke")) {
+                  if(Config.isAnimatedSmoke()) {
+                     var21 = new EntitySmokeFX(this.field_72769_h, par2, par4, par6, par8, par10, par12, 2.5F);
+                  }
+               } else if(par1Str.equals("cloud")) {
+                  var21 = new EntityCloudFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("reddust")) {
+                  if(Config.isAnimatedRedstone()) {
+                     var21 = new EntityReddustFX(this.field_72769_h, par2, par4, par6, (float)par8, (float)par10, (float)par12);
+                     CustomColorizer.updateReddustFX((EntityFX)var21, this.field_72769_h, var15, var17, var19);
+                  }
+               } else if(par1Str.equals("snowballpoof")) {
+                  var21 = new EntityBreakingFX(this.field_72769_h, par2, par4, par6, Items.field_151126_ay);
+               } else if(par1Str.equals("dripWater")) {
+                  if(Config.isDrippingWaterLava()) {
+                     var21 = new EntityDropParticleFX(this.field_72769_h, par2, par4, par6, Material.field_151586_h);
+                  }
+               } else if(par1Str.equals("dripLava")) {
+                  if(Config.isDrippingWaterLava()) {
+                     var21 = new EntityDropParticleFX(this.field_72769_h, par2, par4, par6, Material.field_151587_i);
+                  }
+               } else if(par1Str.equals("snowshovel")) {
+                  var21 = new EntitySnowShovelFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("slime")) {
+                  var21 = new EntityBreakingFX(this.field_72769_h, par2, par4, par6, Items.field_151123_aH);
+               } else if(par1Str.equals("heart")) {
+                  var21 = new EntityHeartFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+               } else if(par1Str.equals("angryVillager")) {
+                  var21 = new EntityHeartFX(this.field_72769_h, par2, par4 + 0.5D, par6, par8, par10, par12);
+                  ((EntityFX)var21).func_70536_a(81);
+                  ((EntityFX)var21).func_70538_b(1.0F, 1.0F, 1.0F);
+               } else if(par1Str.equals("happyVillager")) {
+                  var21 = new EntityAuraFX(this.field_72769_h, par2, par4, par6, par8, par10, par12);
+                  ((EntityFX)var21).func_70536_a(82);
+                  ((EntityFX)var21).func_70538_b(1.0F, 1.0F, 1.0F);
+               } else {
+                  String[] var27;
+                  int var261;
+                  if(par1Str.startsWith("iconcrack_")) {
+                     var27 = par1Str.split("_", 3);
+                     int var28 = Integer.parseInt(var27[1]);
+                     if(var27.length > 2) {
+                        var261 = Integer.parseInt(var27[2]);
+                        var21 = new EntityBreakingFX(this.field_72769_h, par2, par4, par6, par8, par10, par12, Item.func_150899_d(var28), var261);
+                     } else {
+                        var21 = new EntityBreakingFX(this.field_72769_h, par2, par4, par6, par8, par10, par12, Item.func_150899_d(var28), 0);
+                     }
+                  } else {
+                     Block var281;
+                     if(par1Str.startsWith("blockcrack_")) {
+                        var27 = par1Str.split("_", 3);
+                        var281 = Block.func_149729_e(Integer.parseInt(var27[1]));
+                        var261 = Integer.parseInt(var27[2]);
+                        var21 = (new EntityDiggingFX(this.field_72769_h, par2, par4, par6, par8, par10, par12, var281, var261)).func_90019_g(var261);
+                     } else if(par1Str.startsWith("blockdust_")) {
+                        var27 = par1Str.split("_", 3);
+                        var281 = Block.func_149729_e(Integer.parseInt(var27[1]));
+                        var261 = Integer.parseInt(var27[2]);
+                        var21 = (new EntityBlockDustFX(this.field_72769_h, par2, par4, par6, par8, par10, par12, var281, var261)).func_90019_g(var261);
+                     }
+                  }
+               }
+
+               if(var21 != null) {
+                  this.field_72777_q.field_71452_i.func_78873_a((EntityFX)var21);
+               }
+
+               return (EntityFX)var21;
+            }
+         }
+      } else {
+         return null;
+      }
+   }
+
+   public void func_72703_a(Entity par1Entity) {
+      RandomMobs.entityLoaded(par1Entity, this.field_72769_h);
+      if(Config.isDynamicLights()) {
+         DynamicLights.entityAdded(par1Entity, this);
+      }
+
+   }
+
+   public void func_72709_b(Entity par1Entity) {
+      if(Config.isDynamicLights()) {
+         DynamicLights.entityRemoved(par1Entity, this);
+      }
+
+   }
+
+   public void func_72728_f() {
+      GLAllocation.func_74523_b(this.field_72778_p);
+      this.displayListAllocator.deleteDisplayLists();
+   }
+
+   public void func_82746_a(int par1, int par2, int par3, int par4, int par5) {
+      Random var6 = this.field_72769_h.field_73012_v;
+      switch(par1) {
+      case 1013:
+      case 1018:
+         if(this.field_72777_q.field_71451_h != null) {
+            double var7 = (double)par2 - this.field_72777_q.field_71451_h.field_70165_t;
+            double var9 = (double)par3 - this.field_72777_q.field_71451_h.field_70163_u;
+            double var11 = (double)par4 - this.field_72777_q.field_71451_h.field_70161_v;
+            double var13 = Math.sqrt(var7 * var7 + var9 * var9 + var11 * var11);
+            double var15 = this.field_72777_q.field_71451_h.field_70165_t;
+            double var17 = this.field_72777_q.field_71451_h.field_70163_u;
+            double var19 = this.field_72777_q.field_71451_h.field_70161_v;
+            if(var13 > 0.0D) {
+               var15 += var7 / var13 * 2.0D;
+               var17 += var9 / var13 * 2.0D;
+               var19 += var11 / var13 * 2.0D;
+            }
+
+            if(par1 == 1013) {
+               this.field_72769_h.func_72980_b(var15, var17, var19, "mob.wither.spawn", 1.0F, 1.0F, false);
+            } else if(par1 == 1018) {
+               this.field_72769_h.func_72980_b(var15, var17, var19, "mob.enderdragon.end", 5.0F, 1.0F, false);
+            }
+         }
+      default:
+      }
+   }
+
+   public void func_72706_a(EntityPlayer par1EntityPlayer, int par2, int par3, int par4, int par5, int par6) {
+      Random var7 = this.field_72769_h.field_73012_v;
+      Block var8 = null;
+      double var9;
+      double var11;
+      double var13;
+      String var15;
+      int var16;
+      double var22;
+      double var26;
+      double var28;
+      double var30;
+      int var40;
+      double var41;
+      double var21;
+      switch(par2) {
+      case 1000:
+         this.field_72769_h.func_72980_b((double)par3, (double)par4, (double)par5, "random.click", 1.0F, 1.0F, false);
+         break;
+      case 1001:
+         this.field_72769_h.func_72980_b((double)par3, (double)par4, (double)par5, "random.click", 1.0F, 1.2F, false);
+         break;
+      case 1002:
+         this.field_72769_h.func_72980_b((double)par3, (double)par4, (double)par5, "random.bow", 1.0F, 1.2F, false);
+         break;
+      case 1003:
+         if(Math.random() < 0.5D) {
+            this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "random.door_open", 1.0F, this.field_72769_h.field_73012_v.nextFloat() * 0.1F + 0.9F, false);
+         } else {
+            this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "random.door_close", 1.0F, this.field_72769_h.field_73012_v.nextFloat() * 0.1F + 0.9F, false);
+         }
+         break;
+      case 1004:
+         this.field_72769_h.func_72980_b((double)((float)par3 + 0.5F), (double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), "random.fizz", 0.5F, 2.6F + (var7.nextFloat() - var7.nextFloat()) * 0.8F, false);
+         break;
+      case 1005:
+         if(Item.func_150899_d(par6) instanceof ItemRecord) {
+            this.field_72769_h.func_72934_a("records." + ((ItemRecord)Item.func_150899_d(par6)).field_150929_a, par3, par4, par5);
+         } else {
+            this.field_72769_h.func_72934_a((String)null, par3, par4, par5);
+         }
+         break;
+      case 1007:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.ghast.charge", 10.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1008:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.ghast.fireball", 10.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1009:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.ghast.fireball", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1010:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.zombie.wood", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1011:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.zombie.metal", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1012:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.zombie.woodbreak", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1014:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.wither.shoot", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1015:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.bat.takeoff", 0.05F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1016:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.zombie.infect", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1017:
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "mob.zombie.unfect", 2.0F, (var7.nextFloat() - var7.nextFloat()) * 0.2F + 1.0F, false);
+         break;
+      case 1020:
+         this.field_72769_h.func_72980_b((double)((float)par3 + 0.5F), (double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), "random.anvil_break", 1.0F, this.field_72769_h.field_73012_v.nextFloat() * 0.1F + 0.9F, false);
+         break;
+      case 1021:
+         this.field_72769_h.func_72980_b((double)((float)par3 + 0.5F), (double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), "random.anvil_use", 1.0F, this.field_72769_h.field_73012_v.nextFloat() * 0.1F + 0.9F, false);
+         break;
+      case 1022:
+         this.field_72769_h.func_72980_b((double)((float)par3 + 0.5F), (double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), "random.anvil_land", 0.3F, this.field_72769_h.field_73012_v.nextFloat() * 0.1F + 0.9F, false);
+         break;
+      case 2000:
+         int var34 = par6 % 3 - 1;
+         int var10 = par6 / 3 % 3 - 1;
+         var11 = (double)par3 + (double)var34 * 0.6D + 0.5D;
+         var13 = (double)par4 + 0.5D;
+         double var35 = (double)par5 + (double)var10 * 0.6D + 0.5D;
+
+         for(int var43 = 0; var43 < 10; ++var43) {
+            double var44 = var7.nextDouble() * 0.2D + 0.01D;
+            double var45 = var11 + (double)var34 * 0.01D + (var7.nextDouble() - 0.5D) * (double)var10 * 0.5D;
+            var22 = var13 + (var7.nextDouble() - 0.5D) * 0.5D;
+            var41 = var35 + (double)var10 * 0.01D + (var7.nextDouble() - 0.5D) * (double)var34 * 0.5D;
+            var26 = (double)var34 * var44 + var7.nextGaussian() * 0.01D;
+            var28 = -0.03D + var7.nextGaussian() * 0.01D;
+            var30 = (double)var10 * var44 + var7.nextGaussian() * 0.01D;
+            this.func_72708_a("smoke", var45, var22, var41, var26, var28, var30);
+         }
+
+         return;
+      case 2001:
+         var8 = Block.func_149729_e(par6 & 4095);
+         if(var8.func_149688_o() != Material.field_151579_a) {
+            this.field_72777_q.func_147118_V().func_147682_a(new PositionedSoundRecord(new ResourceLocation(var8.field_149762_H.func_150495_a()), (var8.field_149762_H.func_150497_c() + 1.0F) / 2.0F, var8.field_149762_H.func_150494_d() * 0.8F, (float)par3 + 0.5F, (float)par4 + 0.5F, (float)par5 + 0.5F));
+         }
+
+         this.field_72777_q.field_71452_i.func_147215_a(par3, par4, par5, var8, par6 >> 12 & 255);
+         break;
+      case 2002:
+         var9 = (double)par3;
+         var11 = (double)par4;
+         var13 = (double)par5;
+         var15 = "iconcrack_" + Item.func_150891_b(Items.field_151068_bn) + "_" + par6;
+
+         for(var16 = 0; var16 < 8; ++var16) {
+            this.func_72708_a(var15, var9, var11, var13, var7.nextGaussian() * 0.15D, var7.nextDouble() * 0.2D, var7.nextGaussian() * 0.15D);
+         }
+
+         var16 = Items.field_151068_bn.func_77620_a(par6);
+         float var17 = (float)(var16 >> 16 & 255) / 255.0F;
+         float var18 = (float)(var16 >> 8 & 255) / 255.0F;
+         float var19 = (float)(var16 >> 0 & 255) / 255.0F;
+         String var20 = "spell";
+         if(Items.field_151068_bn.func_77833_h(par6)) {
+            var20 = "instantSpell";
+         }
+
+         for(var40 = 0; var40 < 100; ++var40) {
+            var22 = var7.nextDouble() * 4.0D;
+            var41 = var7.nextDouble() * 3.141592653589793D * 2.0D;
+            var26 = Math.cos(var41) * var22;
+            var28 = 0.01D + var7.nextDouble() * 0.5D;
+            var30 = Math.sin(var41) * var22;
+            EntityFX var46 = this.func_72726_b(var20, var9 + var26 * 0.1D, var11 + 0.3D, var13 + var30 * 0.1D, var26, var28, var30);
+            if(var46 != null) {
+               float var33 = 0.75F + var7.nextFloat() * 0.25F;
+               var46.func_70538_b(var17 * var33, var18 * var33, var19 * var33);
+               var46.func_70543_e((float)var22);
+            }
+         }
+
+         this.field_72769_h.func_72980_b((double)par3 + 0.5D, (double)par4 + 0.5D, (double)par5 + 0.5D, "game.potion.smash", 1.0F, this.field_72769_h.field_73012_v.nextFloat() * 0.1F + 0.9F, false);
+         break;
+      case 2003:
+         var9 = (double)par3 + 0.5D;
+         var11 = (double)par4;
+         var13 = (double)par5 + 0.5D;
+         var15 = "iconcrack_" + Item.func_150891_b(Items.field_151061_bv);
+
+         for(var16 = 0; var16 < 8; ++var16) {
+            this.func_72708_a(var15, var9, var11, var13, var7.nextGaussian() * 0.15D, var7.nextDouble() * 0.2D, var7.nextGaussian() * 0.15D);
+         }
+
+         for(var21 = 0.0D; var21 < 6.283185307179586D; var21 += 0.15707963267948966D) {
+            this.func_72708_a("portal", var9 + Math.cos(var21) * 5.0D, var11 - 0.4D, var13 + Math.sin(var21) * 5.0D, Math.cos(var21) * -5.0D, 0.0D, Math.sin(var21) * -5.0D);
+            this.func_72708_a("portal", var9 + Math.cos(var21) * 5.0D, var11 - 0.4D, var13 + Math.sin(var21) * 5.0D, Math.cos(var21) * -7.0D, 0.0D, Math.sin(var21) * -7.0D);
+         }
+
+         return;
+      case 2004:
+         for(var40 = 0; var40 < 20; ++var40) {
+            var22 = (double)par3 + 0.5D + ((double)this.field_72769_h.field_73012_v.nextFloat() - 0.5D) * 2.0D;
+            var41 = (double)par4 + 0.5D + ((double)this.field_72769_h.field_73012_v.nextFloat() - 0.5D) * 2.0D;
+            var26 = (double)par5 + 0.5D + ((double)this.field_72769_h.field_73012_v.nextFloat() - 0.5D) * 2.0D;
+            this.field_72769_h.func_72869_a("smoke", var22, var41, var26, 0.0D, 0.0D, 0.0D);
+            this.field_72769_h.func_72869_a("flame", var22, var41, var26, 0.0D, 0.0D, 0.0D);
+         }
+
+         return;
+      case 2005:
+         ItemDye.func_150918_a(this.field_72769_h, par3, par4, par5, par6);
+         break;
+      case 2006:
+         var8 = this.field_72769_h.func_147439_a(par3, par4, par5);
+         if(var8.func_149688_o() != Material.field_151579_a) {
+            var21 = (double)Math.min(0.2F + (float)par6 / 15.0F, 10.0F);
+            if(var21 > 2.5D) {
+               var21 = 2.5D;
+            }
+
+            int var23 = (int)(150.0D * var21);
+
+            for(int var24 = 0; var24 < var23; ++var24) {
+               float var25 = MathHelper.func_151240_a(var7, 0.0F, 6.2831855F);
+               var26 = (double)MathHelper.func_151240_a(var7, 0.75F, 1.0F);
+               var28 = 0.20000000298023224D + var21 / 100.0D;
+               var30 = (double)(MathHelper.func_76134_b(var25) * 0.2F) * var26 * var26 * (var21 + 0.2D);
+               double var32 = (double)(MathHelper.func_76126_a(var25) * 0.2F) * var26 * var26 * (var21 + 0.2D);
+               this.field_72769_h.func_72869_a("blockdust_" + Block.func_149682_b(var8) + "_" + this.field_72769_h.func_72805_g(par3, par4, par5), (double)((float)par3 + 0.5F), (double)((float)par4 + 1.0F), (double)((float)par5 + 0.5F), var30, var28, var32);
+            }
+         }
+      }
+
+   }
+
+   public void func_147587_b(int p_147587_1_, int p_147587_2_, int p_147587_3_, int p_147587_4_, int p_147587_5_) {
+      if(p_147587_5_ >= 0 && p_147587_5_ < 10) {
+         DestroyBlockProgress var6 = (DestroyBlockProgress)this.field_72738_E.get(Integer.valueOf(p_147587_1_));
+         if(var6 == null || var6.func_73110_b() != p_147587_2_ || var6.func_73109_c() != p_147587_3_ || var6.func_73108_d() != p_147587_4_) {
+            var6 = new DestroyBlockProgress(p_147587_1_, p_147587_2_, p_147587_3_, p_147587_4_);
+            this.field_72738_E.put(Integer.valueOf(p_147587_1_), var6);
+         }
+
+         var6.func_73107_a(p_147587_5_);
+         var6.func_82744_b(this.field_72773_u);
+      } else {
+         this.field_72738_E.remove(Integer.valueOf(p_147587_1_));
+      }
+
+   }
+
+   public void func_94140_a(IIconRegister par1IconRegister) {
+      this.field_94141_F = new IIcon[10];
+
+      for(int var2 = 0; var2 < this.field_94141_F.length; ++var2) {
+         this.field_94141_F[var2] = par1IconRegister.func_94245_a("destroy_stage_" + var2);
+      }
+
+   }
+
+   public void setAllRenderersVisible() {
+      if(this.field_72765_l != null) {
+         for(int i = 0; i < this.field_72765_l.length; ++i) {
+            this.field_72765_l[i].field_78936_t = true;
+         }
+
+      }
+   }
+
+   public boolean isMoving(EntityLivingBase entityliving) {
+      boolean moving = this.isMovingNow(entityliving);
+      if(moving) {
+         this.lastMovedTime = System.currentTimeMillis();
+         return true;
+      } else {
+         return System.currentTimeMillis() - this.lastMovedTime < 2000L;
+      }
+   }
+
+   private boolean isMovingNow(EntityLivingBase entityliving) {
+      double maxDiff = 0.001D;
+      return entityliving.func_70093_af()?true:((double)entityliving.field_70732_aI > maxDiff?true:(this.field_72777_q.field_71417_B.field_74377_a != 0?true:(this.field_72777_q.field_71417_B.field_74375_b != 0?true:(Math.abs(entityliving.field_70165_t - entityliving.field_70169_q) > maxDiff?true:(Math.abs(entityliving.field_70163_u - entityliving.field_70167_r) > maxDiff?true:Math.abs(entityliving.field_70161_v - entityliving.field_70166_s) > maxDiff)))));
+   }
+
+   public boolean isActing() {
+      boolean acting = this.isActingNow();
+      if(acting) {
+         this.lastActionTime = System.currentTimeMillis();
+         return true;
+      } else {
+         return System.currentTimeMillis() - this.lastActionTime < 500L;
+      }
+   }
+
+   public boolean isActingNow() {
+      return Mouse.isButtonDown(0)?true:Mouse.isButtonDown(1);
+   }
+
+   public int renderAllSortedRenderers(int renderPass, double partialTicks) {
+      return this.func_72724_a(0, this.countSortedWorldRenderers, renderPass, partialTicks);
+   }
+
+   public void updateCapes() {}
+
+   public AxisAlignedBB getTileEntityBoundingBox(TileEntity te) {
+      if(!te.func_145830_o()) {
+         return AABB_INFINITE;
+      } else {
+         Block blockType = te.func_145838_q();
+         if(blockType == Blocks.field_150381_bn) {
+            return AxisAlignedBB.func_72330_a((double)te.field_145851_c, (double)te.field_145848_d, (double)te.field_145849_e, (double)(te.field_145851_c + 1), (double)(te.field_145848_d + 1), (double)(te.field_145849_e + 1));
+         } else if(blockType != Blocks.field_150486_ae && blockType != Blocks.field_150447_bR) {
+            AxisAlignedBB blockAabb;
+            if(Reflector.ForgeTileEntity_getRenderBoundingBox.exists()) {
+               blockAabb = (AxisAlignedBB)Reflector.call(te, Reflector.ForgeTileEntity_getRenderBoundingBox, new Object[0]);
+               if(blockAabb != null) {
+                  return blockAabb;
+               }
+            }
+
+            if(blockType != null && blockType != Blocks.field_150461_bJ) {
+               blockAabb = blockType.func_149668_a(te.func_145831_w(), te.field_145851_c, te.field_145848_d, te.field_145849_e);
+               if(blockAabb != null) {
+                  return blockAabb;
+               }
+            }
+
+            return AABB_INFINITE;
+         } else {
+            return AxisAlignedBB.func_72330_a((double)(te.field_145851_c - 1), (double)te.field_145848_d, (double)(te.field_145849_e - 1), (double)(te.field_145851_c + 2), (double)(te.field_145848_d + 2), (double)(te.field_145849_e + 2));
+         }
+      }
+   }
+
+   public void addToSortedWorldRenderers(WorldRenderer wr) {
+      if(!wr.inSortedWorldRenderers) {
+         int pos = this.countSortedWorldRenderers;
+         wr.updateDistanceToEntitySquared(this.renderViewEntity);
+         float distSq = wr.sortDistanceToEntitySquared;
+         int countGreater;
+         if(this.countSortedWorldRenderers > 0) {
+            countGreater = 0;
+            int high = this.countSortedWorldRenderers - 1;
+            int mid = (countGreater + high) / 2;
+
+            while(countGreater <= high) {
+               mid = (countGreater + high) / 2;
+               WorldRenderer wrMid = this.field_72768_k[mid];
+               if(distSq < wrMid.sortDistanceToEntitySquared) {
+                  high = mid - 1;
+               } else {
+                  countGreater = mid + 1;
+               }
+            }
+
+            if(countGreater > mid) {
+               pos = mid + 1;
+            } else {
+               pos = mid;
+            }
+         }
+
+         countGreater = this.countSortedWorldRenderers - pos;
+         if(countGreater > 0) {
+            System.arraycopy(this.field_72768_k, pos, this.field_72768_k, pos + 1, countGreater);
+         }
+
+         this.field_72768_k[pos] = wr;
+         wr.inSortedWorldRenderers = true;
+         ++this.countSortedWorldRenderers;
+      }
+   }
+
+   public int getCountRenderers() {
+      return this.field_72751_K;
+   }
+
+   public int getCountActiveRenderers() {
+      return this.field_72746_N;
+   }
+
+   public int getCountEntitiesRendered() {
+      return this.field_72749_I;
+   }
+
+   public int getCountTileEntitiesRendered() {
+      return this.countTileEntitiesRendered;
+   }
+
+}

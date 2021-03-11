@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="86d14131-306c-4ac7-96db-f9684937fd76" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="FxmlFile" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/lwjgl/lwjgl/lwjgl/2.9.1/lwjgl-2.9.1-sources.jar!/org/lwjgl/opengl/GL11.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="jar://$USER_HOME$/Downloads/CheatBreaker/lib/CheatBreaker.jar!/IlIlIIIIIllIlIlIIllIlIIIl.class" root0="FORCE_HIGHLIGHTING" />
+    <setting file="jar://$USER_HOME$/Downloads/CheatBreaker/lib/CheatBreaker.jar!/lIIIIIlIlIIIIIIIlIlIlllIl.class" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectId" id="1njluxFo9vCZj5W5kod7qoMn4ou" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/cheatbreaker/client/util" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="run.code.analysis.last.selected.profile" value="aDefault" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="ReaderModeSettings">
+    <option name="enabled" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.cheatbreaker.client.util.shifttab" />
+      <recent name="com.cheatbreaker.client.module.type" />
+      <recent name="com.cheatbreaker.client.ui" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Decencies\Desktop\CheatBreaker\src\main\java\com\cheatbreaker\client\util" />
+      <recent name="C:\Users\Decencies\Desktop\CheatBreaker\src\main\java\com\cheatbreaker\client\nethandler" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Decencies\Desktop\CheatBreaker\src\main\java\com\cheatbreaker\client\event\type" />
+      <recent name="C:\Users\Decencies\Desktop\CheatBreaker\src\main\java\com\cheatbreaker\client\util" />
+      <recent name="C:\Users\Decencies\Desktop\CheatBreaker\src\main\java\com\cheatbreaker\client\gui\font" />
+    </key>
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="com.cheatbreaker.client.util.friend" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Steve">
+    <configuration name="Alex" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Start" />
+      <module name="CheatBreaker" />
+      <option name="PROGRAM_PARAMETERS" value="--username Alex" />
+      <option name="VM_PARAMETERS" value="-Djava.library.path=./natives/ -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5009 -XXaltjvm=dcevm -XX:+UnlockExperimentalVMOptions" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Steve" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Start" />
+      <module name="CheatBreaker" />
+      <option name="PROGRAM_PARAMETERS" value="--username Steve" />
+      <option name="VM_PARAMETERS" value="-Djava.library.path=./natives/ -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010 -XXaltjvm=dcevm -XX:+UnlockExperimentalVMOptions" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cheatbreaker-client [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="package" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Steve" />
+      <item itemvalue="Application.Alex" />
+      <item itemvalue="Maven.cheatbreaker-client [clean,package]" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="86d14131-306c-4ac7-96db-f9684937fd76" name="Default Changelist" comment="" />
+      <created>1611911608536</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1611911608536</updated>
+    </task>
+    <servers />
+  </component>
+</project>

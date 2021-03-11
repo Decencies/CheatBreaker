@@ -1,0 +1,95 @@
+OptiFine 1.7.10_HD_U_D6
+ - fixed dynamic lights: blaze rod, blaze powder, glowstone dust, prismarine crystals, magma cream, spectator mode, tnt, creeper
+ - fixed unicode font rendering with HD resource packs
+ - added Dynamic Lights (off, fast, fancy)
+ - added option "Details -> Dynamic FOV" - enables or disables the FOV change when flying or sprinting
+ - added "offsetBold" in font properties (assets/minecraft/textures/font/ascii.properties), default is 1.0 for 16x and 0.5 for 32x and above
+ - added folder selection in installer
+ - added build number
+ - fixed unicode font shadow
+ - compatible with Forge #1614
+ (06.06.2016)
+
+OptiFine 1.7.10_HD_U_D4
+ - fixed Forge Block.hasTileEntity() for Immersive Engineering
+ - compatible with Forge #1614
+ (28.04.2016)
+
+OptiFine 1.7.10_HD_U_D3
+ - removed all Mojang content from final JAR  
+ - added support for class patches
+ - compatible with Forge #1614
+ (15.03.2016)
+
+OptiFine 1.7.10_HD_U_D2
+ - added support for preview versions
+ - fixed entity updates - MoCreature insects
+ - compatible with Forge #1614
+ (23.02.2016)
+ 
+OptiFine 1.7.10_HD_U_D1
+ - fixed Random Mobs in multiplayer worlds
+ - added support for RandomMobs property files (biome, height, weight) 
+ - fixed transparent textures with alpha < 16
+ - fixed logo "mojang.png" to be loaded from resource packs
+ - fixed compass and clock to work when animations are off
+ - extended "mcpatcher/color.properties", added support for "clouds=off"
+ - added custom text colors
+ - added blend method overlay for custom sky
+ - fixed overlapping transitions for custom sky
+ - fixed connected textures to check for server resource pack
+ - fixed rendering of custom unicode fonts
+ - extended crash report
+ - fixed bold text with HD font
+ - unicode character widths are reloaded with the resource pack
+ - optimized remote resource loading with http pipelining
+ - added notification for 32-bit Java running on 64-bit OS
+ - added option Show FPS - displays compact rendering information
+ - added option Vignette: Fast = FPS + 10%
+ - extended option Fast Render with new optimizations: ON = FPS + 10%
+ - fixed Animated Textures to load textures only when enabled
+ - compatible with Forge #1614
+ (21.01.2016)
+
+OptiFine 1.7.10_HD_U_C1 
+ - enabled Forge loading screen
+ - compatible with Forge #1481
+ (02.07.2015)
+
+OptiFine 1.7.10_HD_U_B8 
+ - updated Forge compatibility
+ - compatible with Forge #1481
+ (30.06.2015)
+ 
+OptiFine 1.7.10_HD_U_B7 
+ - updated to work with Forge loading screen
+ - compatible with Forge #1395
+ (27.04.2015)
+
+OptiFine 1.7.10_HD_U_B6 
+ - removed reference to MinecraftProfileTexture
+ - fixed "java.lang.NoSuchMethodError: com.mojang.authlib.minecraft.MinecraftProfileTexture" when Authlib is silently updated to 1.5.21
+ (17.04.2015)
+
+OptiFine 1.7.10_HD_U_B5
+ - optimized chunk rendering, FPS +30% is possible
+ - report OpenGL errors in chat
+ - updated Forge compatibility
+ - compatible with Forge #1291
+ (30.01.2015)
+
+OptiFine 1.7.10_HD_U_B4
+ - various bugfixes
+ - updated Forge compatibility
+ - compatible with Forge #1240
+ (19.12.2014)
+
+OptiFine 1.7.10_HD_U_B1
+ - fixed Forge compatibility
+ - compatible with Forge #1240
+ (05.12.2014)
+
+OptiFine 1.7.10_HD_U_A4
+ - fixed compatibility with Railcraft and IC2
+ - compatible with Forge #1180
+ (07.07.2014)
