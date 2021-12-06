@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import com.cheatbreaker.client.CheatBreaker;
+import com.cheatbreaker.client.config.GlobalSettings;
+
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1006,6 +1009,8 @@ public class CustomColorizer
         {
             return false;
         }
+        if ((Boolean) globalSettings.enableFpsBoost.getValue() && (Boolean)globalSettings.fullBright.getValue())
+            return false;
         else if (lightMapsColorsRgb == null)
         {
             return false;
