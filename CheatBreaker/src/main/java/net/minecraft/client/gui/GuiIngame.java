@@ -141,6 +141,8 @@ public class GuiIngame extends Gui
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(775, 769, 1, 0);
 
+            GlobalSettings globalSettings = CheatBreaker.getInstance().getGlobalSettings();
+            
             if ((Boolean) globalSettings.customCrosshair.getValue())
             {
                 GL11.glPushMatrix();
