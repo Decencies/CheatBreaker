@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Random;
 
 import com.cheatbreaker.client.CheatBreaker;
+import com.cheatbreaker.client.config.GlobalSettings;
 import com.cheatbreaker.client.event.type.GuiDrawEvent;
 import com.cheatbreaker.client.event.type.RenderPreviewEvent;
 import com.cheatbreaker.client.ui.module.CBModulePlaceGui;
 import com.cheatbreaker.client.ui.module.CBModulesGui;
 import com.cheatbreaker.client.ui.overlay.OverlayGui;
+import com.cheatbreaker.client.ui.util.RenderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -138,10 +140,45 @@ public class GuiIngame extends Gui
             this.mc.getTextureManager().bindTexture(icons);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(775, 769, 1, 0);
-            this.drawTexturedModalRect(var6 / 2 - 7, var7 / 2 - 7, 0, 0, 16, 16);
+
+            if ((Boolean) globalSettings.customCrosshair.getValue())
+            {
+                GL11.glPushMatrix();
+                float f1 = 1.0F / CheatBreaker.getScaleFactor();
+                int n = (int)(var6 / f1);
+                int i1 = (int)(var7 / f1);
+                GL11.glScalef(f1, f1, f1);
+
+                float size = ((Float)globalSettings.crosshairSize.getValue()); // size
+                float gap = ((Float)globalSettings.crosshairGap.getValue()); // gap
+                float thickness = ((Float)globalSettings.crosshairThickness.getValue()); // thickness
+                int color = globalSettings.crosshairColor.getColorValue(); // color
+                boolean outline = ((Boolean)globalSettings.crosshairOutline.getValue());
+
+                int i3 = n / 2;
+                int i4 = i1 / 2;
+
+                if (outline) {
+                    RenderUtil.lllIlIIlIIIlIlIIIllIlllIl(i3 - gap - size, i4 - thickness / 2.0F, i3 - gap, i4 + thickness / 2.0F, 0.5F, -1358954496, color);
+                    RenderUtil.lllIlIIlIIIlIlIIIllIlllIl(i3 + gap, i4 - thickness / 2.0F, i3 + gap + size, i4 + thickness / 2.0F, 0.5F, -1358954496, color);
+                    RenderUtil.lllIlIIlIIIlIlIIIllIlllIl(i3 - thickness / 2.0F, i4 - gap - size, i3 + thickness / 2.0F, i4 - gap, 0.5F, -1358954496, color);
+                    RenderUtil.lllIlIIlIIIlIlIIIllIlllIl(i3 - thickness / 2.0F, i4 + gap, i3 + thickness / 2.0F, i4 + gap + size, 0.5F, -1358954496, color);
+                } else {
+                    Gui.drawRect(i3 - gap - size, i4 - thickness / 2.0F, i3 - gap, i4 + thickness / 2.0F, color);
+                    Gui.drawRect(i3 + gap, i4 - thickness / 2.0F, i3 + gap + size, i4 + thickness / 2.0F, color);
+                    Gui.drawRect(i3 - thickness / 2.0F, i4 - gap - size, i3 + thickness / 2.0F, i4 - gap, color);
+                    Gui.drawRect(i3 - thickness / 2.0F, i4 + gap, i3 + thickness / 2.0F, i4 + gap + size, color);
+                }
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GL11.glPopMatrix();
+            }
+            else {
+                this.drawTexturedModalRect(var6 / 2 - 7, var7 / 2 - 7, 0, 0, 16, 16);
+            }
+            
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             this.mc.mcProfiler.startSection("bossHealth");
-            this.renderBossHealth();
+        //    this.renderBossHealth();
             this.mc.mcProfiler.endSection();
 
             if (this.mc.playerController.shouldDrawHUD())
