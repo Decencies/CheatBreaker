@@ -336,10 +336,17 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
             Minecraft.getMinecraft().getSoundHandler().field_147694_f.playSound(s, n);
         }
     }
+    
+    private final Map<String, ResourceLocation> playerSkins = new HashMap<>();
 
     public ResourceLocation getHeadLocation(String displayName, String uuid) {
-
-        return new ResourceLocation("client/defaults/steve.png");
+        ResourceLocation playerSkin = (ResourceLocation)this.playerSkins.getOrDefault(displayName, new ResourceLocation("client/heads/" + displayName + ".png"));
+        if (!this.playerSkins.containsKey(displayName)) {
+            ThreadDownloadImageData skinData = new ThreadDownloadImageData(null, "https://minotar.net/helm/" + displayName + "/32.png", new ResourceLocation("client/defaults/steve.png"), null);
+            (Minecraft.getMinecraft()).getTextureManager().loadTexture(playerSkin, skinData);
+            this.playerSkins.put(displayName, playerSkin);
+        }
+        return playerSkin;
     }
 
     public String clientString() {

@@ -2,6 +2,7 @@ package net.minecraft.client.renderer.entity;
 
 import java.util.Random;
 import java.util.concurrent.Callable;
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -585,7 +586,7 @@ public class RenderItem extends Render
     {
         for (int var6 = 0; var6 < 2; ++var6)
         {
-            OpenGlHelper.glBlendFunc(772, 1, 0, 0);
+            OpenGlHelper.glBlendFunc((Boolean) CheatBreaker.getInstance().globalSettings.shinyPots.getValue() ? 773 : 772, 1, 0, 0);
             float var7 = 0.00390625F;
             float var8 = 0.00390625F;
             float var9 = (float)(Minecraft.getSystemTime() % (long)(3000 + var6 * 1873)) / (3000.0F + (float)(var6 * 1873)) * 256.0F;
