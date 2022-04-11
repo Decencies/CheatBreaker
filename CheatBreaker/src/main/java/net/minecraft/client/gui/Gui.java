@@ -78,7 +78,7 @@ public class Gui
         GL11.glDisable(GL11.GL_BLEND);
     }
 
-    public static void lIIIIlIIllIIlIIlIIIlIIllI(float f, float f2, float f3, float f4, float f5, int n, int n2) {
+    public static void drawRectWithOutline(float f, float f2, float f3, float f4, float f5, int n, int n2) {
         Gui.drawRect(f + f5, f2 + f5, f3 - f5, f4 - f5, n2);
         Gui.drawRect(f, f2 + f5, f + f5, f4 - f5, n);
         Gui.drawRect(f3 - f5, f2 + f5, f3, f4 - f5, n);
@@ -86,7 +86,7 @@ public class Gui
         Gui.drawRect(f, f4 - f5, f3, f4, n);
     }
 
-    public static void lIIIIIIIIIlIllIIllIlIIlIl(float f, float f2, float f3, float f4, float f5, int n, int n2) {
+    public static void drawBoxWithOutLine(float f, float f2, float f3, float f4, float f5, int n, int n2) {
         Gui.drawRect(f, f2, f3, f4, n2);
         Gui.drawRect(f - f5, f2 - f5, f, f4 + f5, n);
         Gui.drawRect(f3, f2 - f5, f3 + f5, f4 + f5, n);

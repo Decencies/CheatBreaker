@@ -31,10 +31,10 @@ public class CrosshairElement extends AbstractModulesGuiElement {
         int n4 = this.x + this.width / 2 - 15;
         int n5 = this.y + this.height / 2 + 3;
         if (bl) {
-            Gui.lIIIIIIIIIlIllIIllIlIIlIl((float)n4 - f4 - f3, (float)n5 - f5 / 2.0f, (float)n4 - f4, (float)n5 + f5 / 2.0f, 0.3380282f * 1.4791666f, -1358954496, n3);
-            Gui.lIIIIIIIIIlIllIIllIlIIlIl((float)n4 + f4, (float)n5 - f5 / 2.0f, (float)n4 + f4 + f3, (float)n5 + f5 / 2.0f, 3.909091f * 0.12790698f, -1358954496, n3);
-            Gui.lIIIIIIIIIlIllIIllIlIIlIl((float)n4 - f5 / 2.0f, (float)n5 - f4 - f3, (float)n4 + f5 / 2.0f, (float)n5 - f4, 0.39506173f * 1.265625f, -1358954496, n3);
-            Gui.lIIIIIIIIIlIllIIllIlIIlIl((float)n4 - f5 / 2.0f, (float)n5 + f4, (float)n4 + f5 / 2.0f, (float)n5 + f4 + f3, 5.5f * 0.09090909f, -1358954496, n3);
+            Gui.drawBoxWithOutLine((float)n4 - f4 - f3, (float)n5 - f5 / 2.0f, (float)n4 - f4, (float)n5 + f5 / 2.0f, 0.3380282f * 1.4791666f, -1358954496, n3);
+            Gui.drawBoxWithOutLine((float)n4 + f4, (float)n5 - f5 / 2.0f, (float)n4 + f4 + f3, (float)n5 + f5 / 2.0f, 3.909091f * 0.12790698f, -1358954496, n3);
+            Gui.drawBoxWithOutLine((float)n4 - f5 / 2.0f, (float)n5 - f4 - f3, (float)n4 + f5 / 2.0f, (float)n5 - f4, 0.39506173f * 1.265625f, -1358954496, n3);
+            Gui.drawBoxWithOutLine((float)n4 - f5 / 2.0f, (float)n5 + f4, (float)n4 + f5 / 2.0f, (float)n5 + f4 + f3, 5.5f * 0.09090909f, -1358954496, n3);
         } else {
             Gui.drawRect((float)n4 - f4 - f3, (float)n5 - f5 / 2.0f, (float)n4 - f4, (float)n5 + f5 / 2.0f, n3);
             Gui.drawRect((float)n4 + f4, (float)n5 - f5 / 2.0f, (float)n4 + f4 + f3, (float)n5 + f5 / 2.0f, n3);
