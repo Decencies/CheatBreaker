@@ -2,8 +2,8 @@ package com.cheatbreaker.client.config;
 
 import com.cheatbreaker.client.CheatBreaker;
 import com.cheatbreaker.client.ui.element.type.ColorPickerColorElement;
-import com.cheatbreaker.client.util.dash.DashPlayer;
 import com.cheatbreaker.client.util.dash.DashUtil;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
@@ -23,12 +23,12 @@ public class GlobalSettings {
     private List<String[]> networkAddressPair;
     private List<String> dummyDomainList;
     public boolean isDebug = true;
-    public String IllIIIIIIIlIlIllllIIllIII = "https://cheatbreaker.com/crash-report-upload";
-    public String lIIIIllIIlIlIllIIIlIllIlI = "https://cheatbreaker.com/debug-upload";
-    public String IlllIllIlIIIIlIIlIIllIIIl = "https://cheatbreaker.com/api/cosmetic/";
-    public String IlIlllIIIIllIllllIllIIlIl = "https://cheatbreaker.com/api/cosmetic/all";
+    public String crashReportURL = "https://cheatbreaker.com/crash-report-upload";
+    public String debugUploadURL = "https://cheatbreaker.com/debug-upload";
+    public String cosmeticApiURL = "https://cheatbreaker.com/api/cosmetic/";
+    public String cosmeticAllApiURL = "https://cheatbreaker.com/api/cosmetic/all";
     public String mojangStatusURL = "https://status.mojang.com/check";
-    public int lIIlIlIllIIlIIIlIIIlllIII = 60;
+    public int reconnectTime = 60;
     public boolean IIIlllIIIllIllIlIIIIIIlII = true;
     private Setting audioSettingsLabel;
     public Setting microphone;
@@ -60,7 +60,7 @@ public class GlobalSettings {
     public Setting clearGlass;
     public Setting redString;
     public Setting transparentBackground;
-    private Setting crosshairSettingsLabel;
+    @Getter private Setting crosshairSettingsLabel;
     public Setting customCrosshair;
     public Setting crosshairOutline;
     public Setting crosshairColor;
@@ -179,9 +179,5 @@ public class GlobalSettings {
         this.dragLook = new KeyBinding("Drag to look", 56, "CheatBreaker Client", true);
         this.hideNames = new KeyBinding("Hide name plates", 0, "CheatBreaker Client", true);
         var2.keyBindings = ArrayUtils.addAll(var2.keyBindings, this.pushToTalk, this.openMenu, this.openVoiceMenu, this.dragLook, this.hideNames);
-    }
-
-    public Setting IIIIllIlIIIllIlllIlllllIl() {
-        return crosshairSettingsLabel;
     }
 }
