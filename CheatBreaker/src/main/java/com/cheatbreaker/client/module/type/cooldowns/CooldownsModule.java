@@ -67,7 +67,7 @@ public class CooldownsModule extends AbstractModule {
                 fake.add(new CooldownRenderer("EnderPearl", 368, 12000L));
             }
             this.scaleAndTranslate(guiDrawEvent.getResolution());
-            float f = 1.0f / CheatBreaker.getScaleFactor();
+            float f = 1.0f / CheatBreaker.getInstance().getScaleFactor();
             GL11.glScalef(f, f, f);
             boolean bl = ((String) listMode.getValue()).equalsIgnoreCase("vertical");
             int n = 36;
@@ -94,7 +94,7 @@ public class CooldownsModule extends AbstractModule {
         GL11.glPushMatrix();
         if (real.size() > 0) {
             this.scaleAndTranslate(guiDrawEvent.getResolution());
-            float f = 1.0f / CheatBreaker.getScaleFactor();
+            float f = 1.0f / CheatBreaker.getInstance().getScaleFactor();
             GL11.glScalef(f, f, f);
             boolean bl = ((String) this.listMode.getValue()).equalsIgnoreCase("vertical");
             int n = 36;

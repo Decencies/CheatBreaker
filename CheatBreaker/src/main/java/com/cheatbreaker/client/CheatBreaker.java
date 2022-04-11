@@ -48,11 +48,7 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
 
     @Getter
     public static CheatBreaker instance;
-    public static byte[] lIIIIIllllIIIIlIlIIIIlIlI;
-
-    static {
-        lIIIIIllllIIIIlIlIIIIlIlI = "Decencies".getBytes();
-    }
+    public static byte[] processBytesAuth = "Decencies".getBytes(); // originally "Vote Trump 2020!" (jhalt's doing LMAO???)
 
     public List<Profile> profiles;
     public Profile activeProfile;
@@ -96,19 +92,19 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
 
     public long startTime;
 
-    private static List<AudioDevice> audioDevices;
-    private VoiceChatManager voiceChatManager;
+    private List<AudioDevice> audioDevices = new ArrayList<>();
+    private final VoiceChatManager voiceChatManager;
 
     public static final AudioFormat universalAudioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 16000.0f, 16, 1, 2, 16000.0f, false);
 
     public List<Session> sessions;
 
-    List<Cosmetic> cosmetics;
+    private List<Cosmetic> cosmetics = new ArrayList<>();
     private AssetsWebSocket websocket;
 
-    private String gitCommit;
-    private String gitCommitId;
-    private String gitBranch;
+    private String gitCommit = "?";
+    private String gitCommitId = "?";
+    private String gitBranch = "?";
 
     private FriendsManager friendsManager;
     private Status statusEnum;
@@ -122,12 +118,14 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
     @Setter
     private boolean acceptingFriendRequests;
 
+    private final Map<String, ResourceLocation> playerSkins = new HashMap<>();
+
     public boolean isConsoleAllowed() {
         return true;
     }
 
     public CheatBreaker() {
-        CheatBreaker.audioDevices = new ArrayList<>();
+        this.audioDevices = new ArrayList<>();
         this.presetLocations = new ArrayList<>();
         cosmetics = new ArrayList<>();
         sessions = new ArrayList<>();
@@ -140,7 +138,7 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
         System.out.println("[CB] Created default configuration presets");
         CheatBreaker.instance = this;
         this.initAudioDevices();
-        this.voiceChatManager = new VoiceChatManager(getAudioDevices().get(0));
+        this.voiceChatManager = new VoiceChatManager(audioDevices.get(0));
         this.globalSettings = new GlobalSettings();
         System.out.println("[CB] Created settings");
         this.eventBus = new EventBus();
@@ -265,7 +263,7 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
                 TargetDataLine dataLine = (TargetDataLine) mixer.getLine(new DataLine.Info(TargetDataLine.class, CheatBreaker.universalAudioFormat));
                 if (info != null) {
                     System.out.println("[CB] Added mic option : " + info.getName());
-                    CheatBreaker.audioDevices.add(new AudioDevice(info.getDescription(), info.getName(), dataLine));
+                    this.audioDevices.add(new AudioDevice(info.getDescription(), info.getName(), dataLine));
                 }
             } catch (final IllegalArgumentException | LineUnavailableException ignored) {
                 // the device was not a microphone.
@@ -273,34 +271,14 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
         }
     }
 
-    public static String[] getAudioDeviceList() {
-        final String[] audioDevices = new String[CheatBreaker.audioDevices.size()];
+    public String[] getAudioDeviceList() {
+        final String[] audioDevices = new String[this.audioDevices.size()];
         int var1 = 0;
-        for(final Iterator<AudioDevice> var2 = CheatBreaker.audioDevices.iterator(); var2.hasNext(); ++var1) {
+        for(final Iterator<AudioDevice> var2 = this.audioDevices.iterator(); var2.hasNext(); ++var1) {
             final AudioDevice var3 = var2.next();
             audioDevices[var1] = var3.getDescriptor();
         }
         return audioDevices;
-    }
-
-    public static String getAudioDevice(final String descriptor) {
-        final Iterator<AudioDevice> var1 = CheatBreaker.audioDevices.iterator();
-        if (!var1.hasNext()) {
-            return descriptor;
-        } else {
-            AudioDevice var2;
-            for(var2 = var1.next(); !var2.getDescriptor().equals(descriptor); var2 = var1.next()) {
-                if (!var1.hasNext()) {
-                    return descriptor;
-                }
-            }
-
-            return var2.getDescriptor();
-        }
-    }
-
-    public static List<AudioDevice> getAudioDevices() {
-        return CheatBreaker.audioDevices;
     }
 
     public boolean isUsingStaffModules() {
@@ -311,7 +289,8 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
         }
         return false;
     }
-    public static float getScaleFactor() {
+
+    public float getScaleFactor() {
         switch (Minecraft.getMinecraft().gameSettings.guiScale) {
             case 0: {
                 return 2.0f;
@@ -329,16 +308,13 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
     }
 
     public void sendSound(final String s) {
-        this.lIIIIlIIllIIlIIlIIIlIIllI(s, 1.0f);
+        this.sendSoundVol(s, 1.0f);
     }
 
-    public void lIIIIlIIllIIlIIlIIIlIIllI(final String s, final float n) {
-        if (!(boolean)this.globalSettings.muteCheatBreakerSounds.getValue()) {
+    public void sendSoundVol(final String s, final float n) {
+        if (!(boolean)this.globalSettings.muteCheatBreakerSounds.getValue())
             Minecraft.getMinecraft().getSoundHandler().field_147694_f.playSound(s, n);
-        }
     }
-    
-    private final Map<String, ResourceLocation> playerSkins = new HashMap<>();
 
     public ResourceLocation getHeadLocation(String displayName, String uuid) {
         ResourceLocation playerSkin = this.playerSkins.getOrDefault(displayName, new ResourceLocation("client/heads/" + displayName + ".png"));
@@ -350,17 +326,16 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
         return playerSkin;
     }
 
-    public String clientString() {
+    public String getPluginMessageChannel() {
         return "CB-Client";
     }
 
-    public String binaryString() {
+    public String getPluginBinaryChannel() {
         return "CB-Binary";
     }
 
     @Override
     public void func_152121_a(MinecraftProfileTexture.Type p_152121_1_, ResourceLocation p_152121_2_) {
-        System.out.println(p_152121_2_.getResourcePath());
     }
 
     public void connectToAssetsServer() {
@@ -380,12 +355,14 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
             final ResourceLocation resourceLocation = new ResourceLocation("client/properties/app.properties");
             final Properties properties = new Properties();
             InputStream inputStream = Minecraft.getMinecraft().getResourceManager().getResource(resourceLocation).getInputStream();
+
             if (inputStream == null) {
-                this.gitCommit = "unknown";
-                this.gitCommitId = "unknown";
-                this.gitBranch = "unknown";
+                this.gitCommit = "?";
+                this.gitCommitId = "?";
+                this.gitBranch = "?";
                 return;
             }
+
             properties.load(inputStream);
             this.gitCommit = properties.getProperty("git.commit.id.abbrev");
             this.gitCommitId = properties.getProperty("git.commit.id");

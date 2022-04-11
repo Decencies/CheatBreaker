@@ -56,7 +56,7 @@ public class MessagesElement extends DraggableElement {
     }
 
     public static String lIIIIlIIllIIlIIlIIIlIIllI(byte[] arrby) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(CheatBreaker.lIIIIIllllIIIIlIlIIIIlIlI, "AES");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(CheatBreaker.processBytesAuth, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(2, secretKeySpec);
         return new String(cipher.doFinal(arrby));

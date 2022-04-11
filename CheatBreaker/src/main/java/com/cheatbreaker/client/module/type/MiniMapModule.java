@@ -37,7 +37,7 @@ public class MiniMapModule extends AbstractModule {
     }
 
     private void onDraw(GuiDrawEvent lIllIllIlIIllIllIlIlIIlIl2) {
-        float f = 1.0f / CheatBreaker.getScaleFactor();
+        float f = 1.0f / CheatBreaker.getInstance().getScaleFactor();
         switch (this.voxelMap.getMapOptions().sizeModifier) {
             case 0: {
                 if (this.getGuiAnchor() == CBGuiAnchor.LEFT_TOP) break;

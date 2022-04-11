@@ -137,7 +137,7 @@ public class GuiIngame extends Gui {
 
             if ((Boolean) globalSettings.customCrosshair.getValue()) {
                 GL11.glPushMatrix();
-                float f1 = 1.0F / CheatBreaker.getScaleFactor();
+                float f1 = 1.0F / CheatBreaker.getInstance().getScaleFactor();
                 int n = (int) (var6 / f1);
                 int i1 = (int) (var7 / f1);
                 GL11.glScalef(f1, f1, f1);

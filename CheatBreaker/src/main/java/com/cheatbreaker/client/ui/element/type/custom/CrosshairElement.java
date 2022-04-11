@@ -21,7 +21,7 @@ public class CrosshairElement extends AbstractModulesGuiElement {
         RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(new ResourceLocation("client/defaults/crosshair.png"), (float)(this.x + (this.width / 2 - 15) - 40), (float)(this.y + 5), (float)80, 45);
         GlobalSettings globalSettings = CheatBreaker.getInstance().globalSettings;
         GL11.glPushMatrix();
-        float f2 = 1.0f / CheatBreaker.getScaleFactor();
+        float f2 = 1.0f / CheatBreaker.getInstance().getScaleFactor();
         GL11.glScalef(f2, f2, f2);
         float f3 = (Float) globalSettings.crosshairSize.getValue();
         float f4 = (Float) globalSettings.crosshairGap.getValue();

@@ -90,7 +90,7 @@ public class GlobalSettings {
     }
 
     public GlobalSettings() {
-        String[] audioDevices = CheatBreaker.getAudioDeviceList();
+        String[] audioDevices = CheatBreaker.getInstance().getAudioDeviceList();
         this.audioSettingsLabel = (new Setting(this.settingsList, "label")).setValue("Audio Settings");
         if (audioDevices.length > 0) {
             this.microphone = (new Setting(this.settingsList, "Microphone")).setValue(audioDevices[0]).acceptedValues(audioDevices).onChange((var0) -> {

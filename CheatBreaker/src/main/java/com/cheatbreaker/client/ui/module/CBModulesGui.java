@@ -79,7 +79,7 @@ public class CBModulesGui extends GuiScreen {
         this.currentScrollableElement = null;
         this.dataHolder = null;
         IlIlllIIIIllIllllIllIIlIl = false;
-        float f = 1.0f / CheatBreaker.getScaleFactor();
+        float f = 1.0f / CheatBreaker.getInstance().getScaleFactor();
         int n = (int)((float)this.width / f);
         int n2 = (int)((float)this.height / f);
         this.IllIIlIIlllllIllIIIlllIII.clear();
@@ -109,7 +109,7 @@ public class CBModulesGui extends GuiScreen {
 
     @Override
     public void updateScreen() {
-        float f = 1.0f / CheatBreaker.getScaleFactor();
+        float f = 1.0f / CheatBreaker.getInstance().getScaleFactor();
         int n = (int)((float)this.width / f);
         int n2 = (int)((float)this.height / f);
         this.lIIIIlIIllIIlIIlIIIlIIllI(n);
@@ -159,7 +159,7 @@ public class CBModulesGui extends GuiScreen {
         super.drawScreen(mouseX, mouseY, f);
         ///this.lIIlllIIlIlllllllllIIIIIl(); blur shader
         ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        float scale = 1.0f / CheatBreaker.getScaleFactor();
+        float scale = 1.0f / CheatBreaker.getInstance().getScaleFactor();
         if (draggingModule != null) {
             if (!Mouse.isButtonDown(1)) {
                 RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(2, 0.0, 2.916666637692187 * 0.8571428656578064, this.height, 0.0, -15599126);
