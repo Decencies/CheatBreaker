@@ -1009,7 +1009,7 @@ public class CustomColorizer
         {
             return false;
         }
-        if ((Boolean) globalSettings.enableFpsBoost.getValue() && (Boolean)globalSettings.fullBright.getValue())
+        if ((Boolean) CheatBreaker.getInstance().globalSettings.enableFpsBoost.getValue() && (Boolean)CheatBreaker.getInstance().globalSettings.fullBright.getValue())
             return false;
         else if (lightMapsColorsRgb == null)
         {
