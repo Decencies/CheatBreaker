@@ -1,0 +1,5 @@
+CheatBreaker/logs/*
+CheatBreaker/*.iml
+CheatBreaker/target/*
+CheatBreaker/*.ini
+CheatBreaker/.idea/*
