@@ -28,6 +28,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
@@ -340,7 +341,7 @@ public class CheatBreaker implements SkinManager.SkinAvailableCallback {
     private final Map<String, ResourceLocation> playerSkins = new HashMap<>();
 
     public ResourceLocation getHeadLocation(String displayName, String uuid) {
-        ResourceLocation playerSkin = (ResourceLocation)this.playerSkins.getOrDefault(displayName, new ResourceLocation("client/heads/" + displayName + ".png"));
+        ResourceLocation playerSkin = this.playerSkins.getOrDefault(displayName, new ResourceLocation("client/heads/" + displayName + ".png"));
         if (!this.playerSkins.containsKey(displayName)) {
             ThreadDownloadImageData skinData = new ThreadDownloadImageData(null, "https://minotar.net/helm/" + displayName + "/32.png", new ResourceLocation("client/defaults/steve.png"), null);
             (Minecraft.getMinecraft()).getTextureManager().loadTexture(playerSkin, skinData);
