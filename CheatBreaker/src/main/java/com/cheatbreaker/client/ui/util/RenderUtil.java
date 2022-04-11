@@ -197,7 +197,7 @@ public class RenderUtil {
     }
 
     public static void lIIIIIIIIIlIllIIllIlIIlIl(float f, float f2, float f3, float f4, int n, int n2) {
-        GL11.glScalef(0.53571427f * 0.93333334f, 0.6883117f * 0.7264151f, 0.28125f * 1.7777778f);
+        GL11.glScalef(0.5f, 0.5f, 0.5f);
         Gui.drawRect((f *= 2.0f) + 1.0f, (f2 *= 2.0f) + 1.0f, (f3 *= 2.0f) - 1.0f, (f4 *= 2.0f) - 1.0f, n2);
         RenderUtil.lIIIIIIIIIlIllIIllIlIIlIl(f, f2 + 1.0f, f4 - 2.0f, n);
         RenderUtil.lIIIIIIIIIlIllIIllIlIIlIl(f3 - 1.0f, f2 + 1.0f, f4 - 2.0f, n);
