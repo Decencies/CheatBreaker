@@ -58,7 +58,7 @@ public class MainMenuBase extends AbstractGui {
         this.languageButton = new IconButtonElement(6, new ResourceLocation("client/icons/globe-24.png"));
         this.accountButtonWidth = CheatBreaker.getInstance().robotoRegular13px.getStringWidth(Minecraft.getMinecraft().getSession().getUsername());
         this.IlllIllIlIIIIlIIlIIllIIIl = new AccountList(this, Minecraft.getMinecraft().getSession().getUsername(), CheatBreaker.getInstance().getHeadLocation(Minecraft.getMinecraft().getSession().getUsername(), Minecraft.getMinecraft().getSession().getPlayerID()));
-        this.loadAccounts();
+        //this.loadAccounts();
     }
 
     /*
