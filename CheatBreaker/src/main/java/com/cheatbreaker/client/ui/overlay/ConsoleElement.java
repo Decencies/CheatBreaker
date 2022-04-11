@@ -41,7 +41,7 @@ public class ConsoleElement extends DraggableElement {
     @Override
     public void handleElementDraw(float mouseX, float mouseY, boolean bl) {
         this.drag(mouseX, mouseY);
-        Gui.lIIIIIIIIIlIllIIllIlIIlIl(this.x, this.y, this.x + this.width, this.y + this.height, 0.2972973f * 1.6818181f, -16777216, -15395563);
+        Gui.drawBoxWithOutLine(this.x, this.y, this.x + this.width, this.y + this.height, 0.2972973f * 1.6818181f, -16777216, -15395563);
         GL11.glPushMatrix();
         Gui.drawRect(this.x, this.y - 0.25f * 2.0f, this.x + this.width, this.y, -1357572843);
         Gui.drawRect(this.x, this.y + this.height, this.x + this.height, this.y + this.height + 0.8961039f * 0.557971f, -1357572843);

@@ -755,9 +755,9 @@ public class CBModulesGui extends GuiScreen {
         n6 = (float) n > (object = cBModule.getScaledPoints(scaledResolution, true))[0] * (Float) cBModule.scale.getValue() && (float) n < (object[0] + cBModule.width) * ((Float) cBModule.scale.getValue()).floatValue() && (float) n2 > object[1] * ((Float) cBModule.scale.getValue()).floatValue() && (float) n2 < (object[1] + cBModule.height) * ((Float) cBModule.scale.getValue()).floatValue() ? 1 : 0;
         if (!this.IlIIIIllIIIIIlllIIlIIlllI) {
             if (this.getModulePosition(cBModule) != null || bl2) {
-                Gui.lIIIIlIIllIIlIIlIIIlIIllI(0.0f, 0.0f, cBModule.width, cBModule.height, 2.064516f * 0.2421875f, -1627324417, 0x1AFFFFFF);
+                Gui.drawRectWithOutline(0.0f, 0.0f, cBModule.width, cBModule.height, 2.064516f * 0.2421875f, -1627324417, 0x1AFFFFFF);
             } else {
-                Gui.lIIIIlIIllIIlIIlIIIlIIllI(0.0f, 0.0f, cBModule.width, cBModule.height, 1.2179487f * 0.41052634f, 0x6FFFFFFF, 0x1AFFFFFF);
+                Gui.drawRectWithOutline(0.0f, 0.0f, cBModule.width, cBModule.height, 1.2179487f * 0.41052634f, 0x6FFFFFFF, 0x1AFFFFFF);
             }
         }
         if (!this.IlIIIIllIIIIIlllIIlIIlllI && n6 != 0) {
@@ -889,7 +889,7 @@ public class CBModulesGui extends GuiScreen {
                     if (!bl) continue;
                     GL11.glPushMatrix();
                     cBModule.scaleAndTranslate(scaledResolution);
-                    Gui.lIIIIlIIllIIlIIlIIIlIIllI(0.0f, 0.0f, cBModule.width, cBModule.height, 0.01923077f * 26.0f, 0, 449387978);
+                    Gui.drawRectWithOutline(0.0f, 0.0f, cBModule.width, cBModule.height, 0.01923077f * 26.0f, 0, 449387978);
                     GL11.glPopMatrix();
                 }
             }

@@ -66,8 +66,8 @@ public class MessagesElement extends DraggableElement {
     public void handleElementDraw(float mouseX, float mouseY, boolean bl) {
         String[] restring;
         this.drag(mouseX, mouseY);
-        Gui.lIIIIIIIIIlIllIIllIlIIlIl(this.x, this.y, this.x + (float)23, this.y + this.height, 0.074324325f * 6.7272725f, -16777216, -14869219);
-        Gui.lIIIIIIIIIlIllIIllIlIIlIl(this.x + (float)23, this.y, this.x + this.width, this.y + this.height, 0.7132353f * 0.7010309f, -16777216, -15395563);
+        Gui.drawBoxWithOutLine(this.x, this.y, this.x + (float)23, this.y + this.height, 0.074324325f * 6.7272725f, -16777216, -14869219);
+        Gui.drawBoxWithOutLine(this.x + (float)23, this.y, this.x + this.width, this.y + this.height, 0.7132353f * 0.7010309f, -16777216, -15395563);
         GL11.glPushMatrix();
         Gui.drawRect(this.x + (float)25, this.y - 1.9285715f * 0.25925925f, this.x + this.width, this.y, -1357572843);
         Gui.drawRect(this.x + (float)25, this.y + this.height, this.x + this.width, this.y + this.height + 0.25f * 2.0f, -1357572843);
