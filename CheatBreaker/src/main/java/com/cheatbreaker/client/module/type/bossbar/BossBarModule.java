@@ -12,10 +12,11 @@ import org.lwjgl.opengl.GL11;
 public class BossBarModule extends AbstractModule {
 
     public BossBarModule() {
-        super("Native Anus");
+        super("Boss bar");
         this.setDefaultAnchor(CBGuiAnchor.MIDDLE_TOP);
         this.addEvent(GuiDrawEvent.class, this::renderReal);
         this.addEvent(RenderPreviewEvent.class, this::renderPreview);
+        this.setPreviewLabel("Boss Bar", 1.0f);
         this.setDefaultState(true);
     }
 
@@ -38,7 +39,7 @@ public class BossBarModule extends AbstractModule {
             String bossName = "Wither";
             fontRenderer.drawStringWithShadow(bossName, this.width / 2.0f - (float)(fontRenderer.getStringWidth(bossName) / 2), n5 - 10, 0xFFFFFF);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            //this.minecraft.getTextureManager().bindTexture(Gui.icons);
+            this.minecraft.getTextureManager().bindTexture(Gui.icons);
             this.setDimensions(182, 20);
         }
         GL11.glPopMatrix();
@@ -63,7 +64,7 @@ public class BossBarModule extends AbstractModule {
             String bossName = BossStatus.bossName;
             fontRenderer.drawStringWithShadow(bossName, this.width / 2.0f - (float)(fontRenderer.getStringWidth(bossName) / 2), n5 - 10, 0xFFFFFF);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            //this.minecraft.getTextureManager().bindTexture(Gui.icons);
+            this.minecraft.getTextureManager().bindTexture(Gui.icons);
             this.setDimensions(182, 20);
         }
         GL11.glPopMatrix();
