@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.cheatbreaker.client.CheatBreaker;
+import com.cheatbreaker.client.ui.overlay.OverlayGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -77,8 +79,16 @@ public class GuiScreen extends Gui
      */
     protected void keyTyped(char p_73869_1_, int p_73869_2_)
     {
+        if (Keyboard.isKeyDown(42) && p_73869_2_ == 15)
+        {
+            this.mc.displayGuiScreen(OverlayGui.createInstance(this.mc.currentScreen));
+        }
         if (p_73869_2_ == 1)
         {
+            if ((Boolean) CheatBreaker.getInstance().getGlobalSettings().guiBlur.getValue())
+            {
+                this.mc.entityRenderer.stopUseShader();
+            }
             this.mc.displayGuiScreen(null);
             this.mc.setIngameFocus();
         }
@@ -366,9 +376,9 @@ public class GuiScreen extends Gui
 
     public void func_146270_b(int p_146270_1_)
     {
-        if (this.mc.theWorld != null)
+        if (this.mc.theWorld != null || OverlayGui.getInstance() != null)
         {
-            this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
+            drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
         }
         else
         {
