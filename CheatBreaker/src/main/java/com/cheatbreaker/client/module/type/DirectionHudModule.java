@@ -19,7 +19,7 @@ public class DirectionHudModule extends AbstractModule {
     private final ResourceLocation texture = new ResourceLocation("textures/gui/compass.png");
 
     public DirectionHudModule() {
-        super("Direction Hud");
+        super("Direction HUD");
         this.setDefaultAnchor(CBGuiAnchor.MIDDLE_MIDDLE);
         this.setState(false);
         this.showWhileTyping = new Setting(this, "Show While Typing").setValue(true);
@@ -33,14 +33,17 @@ public class DirectionHudModule extends AbstractModule {
         if (!this.isRenderHud()) {
             return;
         }
+        int backgroundColor = 0xFF212121;
         GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_BLEND);
         this.scaleAndTranslate(guiDrawEvent.getResolution());
         this.setDimensions(66, 18);
         if (!(minecraft.currentScreen instanceof GuiChat) || (Boolean) this.showWhileTyping.getValue()) {
-            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            GL11.glColor4f((float)(backgroundColor >> 16 & 0xFF) / (float)255, (float)(backgroundColor >> 8 & 0xFF) / (float)255, (float)(backgroundColor & 0xFF) / (float)255, (float)(backgroundColor >> 24 & 255) / (float)255);
             this.render(guiDrawEvent.getResolution());
-            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            GL11.glColor4f((float)(backgroundColor >> 16 & 0xFF) / (float)255, (float)(backgroundColor >> 8 & 0xFF) / (float)255, (float)(backgroundColor & 0xFF) / (float)255, (float)(backgroundColor >> 24 & 255) / (float)255);
         }
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
@@ -48,11 +51,13 @@ public class DirectionHudModule extends AbstractModule {
         int n = MathHelper.floor_double((double)(this.minecraft.thePlayer.rotationYaw * (float)256 / (float)360) + 0.5) & 0xFF;
         int n2 = 0;
         int n3 = 0;
+        int backgroundColor = 0xFF212121;
+
         if ((Integer)this.directionColor.getValue() != 4095) {
             int n4 = this.directionColor.getColorValue();
             this.minecraft.getTextureManager().bindTexture(this.texture);
-            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             if (n < 128) {
+                GL11.glColor4f((float)(backgroundColor >> 16 & 0xFF) / (float)255, (float)(backgroundColor >> 8 & 0xFF) / (float)255, (float)(backgroundColor & 0xFF) / (float)255, (float)(backgroundColor >> 24 & 255) / (float)255);
                 HudUtil.drawTexturedModalRect(n3, n2, n, 0, 65, 12, -100);
             } else {
                 HudUtil.drawTexturedModalRect(n3, n2, n - 128, 12, 65, 12, -100);
