@@ -1,5 +1,6 @@
 package net.minecraft.client.entity;
 
+import net.minecraft.MinecraftMovementInputHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiCommandBlock;
@@ -79,10 +80,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
     /** The amount of time an entity has been in a Portal the previous tick */
     public float prevTimeInPortal;
 
+    private final MinecraftMovementInputHelper minecraftMovementInputHelper;
+
 
     public EntityPlayerSP(Minecraft p_i1238_1_, World p_i1238_2_, Session p_i1238_3_, int p_i1238_4_)
     {
         super(p_i1238_2_, p_i1238_3_.func_148256_e());
+        this.minecraftMovementInputHelper = new MinecraftMovementInputHelper(Minecraft.getMinecraft().gameSettings);
         this.mc = p_i1238_1_;
         this.dimension = p_i1238_4_;
     }
