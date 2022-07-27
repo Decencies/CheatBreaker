@@ -70,7 +70,7 @@ public class PinnedServerEntry implements GuiListExtended.IGuiListEntry {
             });
         }
         GL11.glColor4f(1.0f, 0.40909088f * 2.2f, 0.0f, 1.0f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.starIcon, (float)5, (float)(n2 - 17), (float)(n3 + (this.server.isCheatBreaker() ? 4 : 12)));
+        RenderUtil.drawIcon(this.starIcon, (float)5, (float)(n2 - 17), (float)(n3 + (this.server.isCheatBreaker() ? 4 : 12)));
         GL11.glColor4f(11.5f * 0.073913045f, 0.2857143f * 2.975f, 3.0f * 0.28333333f, 1.0f);
         if (this.server.isCheatBreaker()) {
             float f = 16;

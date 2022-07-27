@@ -45,7 +45,7 @@ public class ProfilesListElement extends AbstractScrollableElement {
         }
         n3 = (float) mouseX > (float)(this.x + this.width - 92) * this.scale && (float) mouseX < (float)(this.x + this.width - 6) * this.scale && (float) mouseY > (float)(this.y + this.IlllIllIlIIIIlIIlIIllIIIl - 10 + this.lIIIIllIIlIlIllIIIlIllIlI) * this.scale && (float) mouseY < (float)(this.y + this.IlllIllIlIIIIlIIlIIllIIIl + 3 + this.lIIIIllIIlIlIllIIIlIllIlI) * this.scale ? 1 : 0;
         GL11.glColor4f(n3 != 0 ? 0.0f : 0.22590362f * 1.1066667f, n3 != 0 ? 1.4117647f * 0.56666666f : 1.3333334f * 0.1875f, n3 != 0 ? 0.0f : 0.14423077f * 1.7333333f, 1.7058823f * 0.38103446f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.plusIcon, 3.4435484f * 1.0163934f, (float)(this.x + this.width - 15), (float)(this.y + this.IlllIllIlIIIIlIIlIIllIIIl) - 0.6506024f * 9.990741f);
+        RenderUtil.drawIcon(this.plusIcon, 3.4435484f * 1.0163934f, (float)(this.x + this.width - 15), (float)(this.y + this.IlllIllIlIIIIlIIlIIllIIIl) - 0.6506024f * 9.990741f);
         object = (n3 != 0 ? "(COPIES CURRENT PROFILE) " : "") + "ADD NEW PROFILE";
         CheatBreaker.getInstance().ubuntuMedium16px.drawString((String)object, this.x + this.width - 17 - CheatBreaker.getInstance().ubuntuMedium16px.getStringWidth((String)object), (float)(this.y + this.IlllIllIlIIIIlIIlIIllIIIl) - 64.28571f * 0.11666667f, n3 != 0 ? 0x7F007F00 : 0x7F000000);
         this.IlllIllIlIIIIlIIlIIllIIIl += 10;

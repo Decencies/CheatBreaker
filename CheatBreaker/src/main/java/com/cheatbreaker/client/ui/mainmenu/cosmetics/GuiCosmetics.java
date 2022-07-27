@@ -60,10 +60,10 @@ public class GuiCosmetics extends MainMenuBase {
                 if (this.IIIIllIlIIIllIlllIlllllIl.size() > 5) {
                     boolean bl = f > this.getScaledWidth() / 2.0f - (float)40 && f < this.getScaledWidth() / 2.0f - 1.0f && f2 > this.getScaledHeight() / 2.0f + (float)80 && f2 < this.getScaledHeight() / 2.0f + (float)100;
                     GL11.glColor4f(0.0f, 0.0f, 0.0f, bl ? 0.37499997f * 1.2f : 0.8958333f * 0.27906978f);
-                    RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.leftIcon, (float)4, this.getScaledWidth() / 2.0f - (float)10, this.getScaledHeight() / 2.0f + (float)84);
+                    RenderUtil.drawIcon(this.leftIcon, (float)4, this.getScaledWidth() / 2.0f - (float)10, this.getScaledHeight() / 2.0f + (float)84);
                     boolean bl2 = f > this.getScaledWidth() / 2.0f + 1.0f && f < this.getScaledWidth() / 2.0f + (float)40 && f2 > this.getScaledHeight() / 2.0f + (float)80 && f2 < this.getScaledHeight() / 2.0f + (float)100;
                     GL11.glColor4f(0.0f, 0.0f, 0.0f, bl2 ? 0.012658228f * 35.55f : 0.7083333f * 0.3529412f);
-                    RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.rightIcon, (float)4, this.getScaledWidth() / 2.0f + (float)10, this.getScaledHeight() / 2.0f + (float)84);
+                    RenderUtil.drawIcon(this.rightIcon, (float)4, this.getScaledWidth() / 2.0f + (float)10, this.getScaledHeight() / 2.0f + (float)84);
                 }
             }
         }

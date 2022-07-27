@@ -4,7 +4,6 @@ import com.cheatbreaker.client.CheatBreaker;
 import com.cheatbreaker.client.event.type.GuiDrawEvent;
 import com.cheatbreaker.client.event.type.TickEvent;
 import com.cheatbreaker.client.ui.util.RenderUtil;
-import com.cheatbreaker.client.util.voicechat.VoiceUser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -63,7 +62,7 @@ public class VoiceChat {
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         ResourceLocation resourceLocation = CheatBreaker.getInstance().getHeadLocation(string, string2);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(resourceLocation, (float)7, f + 2.0f, f2 + 2.0f);
+        RenderUtil.drawIcon(resourceLocation, (float)7, f + 2.0f, f2 + 2.0f);
         this.cheatbreaker.playRegular16px.drawString(string, f + (float)22, f2 + (float)4, -1);
     }
 

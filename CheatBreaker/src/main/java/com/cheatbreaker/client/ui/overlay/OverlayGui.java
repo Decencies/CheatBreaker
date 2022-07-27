@@ -109,7 +109,7 @@ public class OverlayGui extends AbstractGui {
         Gui.drawRect(6, 6, 22, 22, Friend.getStatusColor(CheatBreaker.getInstance().getStatus()));
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         ResourceLocation headLocation = CheatBreaker.getInstance().getHeadLocation(this.mc.getSession().getUsername(), this.mc.getSession().getPlayerID());
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(headLocation, 7f, 7f, 7f);
+        RenderUtil.drawIcon(headLocation, 7f, 7f, 7f);
         String username = this.mc.getSession().getUsername();
         CheatBreaker.getInstance().playRegular16px.drawString(username, 28, 6f, -1);
         CheatBreaker.getInstance().playRegular16px.drawString(CheatBreaker.getInstance().getStatusString(), 28, (float)15, -5460820);
@@ -125,13 +125,13 @@ public class OverlayGui extends AbstractGui {
             boolean busyHovered = f > 60f && f < 76f;
             boolean offlineHovered = f > 78f && f < 94f;
             GL11.glColor4f(onlineHovered ? 0.35f : 0.15f, onlineHovered ? 0.35f :0.15f, onlineHovered ?0.35f :0.15f, 1.0f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(headLocation, (float)7, (float)25, (float)7);
+            RenderUtil.drawIcon(headLocation, (float)7, (float)25, (float)7);
             GL11.glColor4f(awayHovered ? 0.35f : 0.15f, awayHovered ? 0.35f :0.15f, awayHovered ? 0.35f :0.15f, 1.0f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(headLocation, (float)7, (float)43, (float)7);
+            RenderUtil.drawIcon(headLocation, (float)7, (float)43, (float)7);
             GL11.glColor4f(busyHovered ? 0.35f : 0.15f, busyHovered ? 0.35f :0.15f, busyHovered ? 0.35f :0.15f, 1.0f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(headLocation, (float)7, (float)61, (float)7);
+            RenderUtil.drawIcon(headLocation, (float)7, (float)61, (float)7);
             GL11.glColor4f(offlineHovered ? 0.35f : 0.15f, offlineHovered ? 0.35f :0.15f, offlineHovered ? 0.35f :0.15f, 1.0f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(headLocation, (float)7, (float)79, (float)7);
+            RenderUtil.drawIcon(headLocation, (float)7, (float)79, (float)7);
         }
         this.selectedElement.drawElement(f, f2, this.isMouseHovered(this.requestsButton, f, f2));
         Gui.drawRect(69.5f, 28, 70.5f, (float)28 + this.friendsButton.getHeight(), -14869219);

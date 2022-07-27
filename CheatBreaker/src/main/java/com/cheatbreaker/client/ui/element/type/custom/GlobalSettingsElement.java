@@ -43,7 +43,7 @@ public class GlobalSettingsElement
             Gui.drawRect(this.x, (int)((float)this.y + ((float)this.height - (float)this.height * f3 / (float)100)), this.x + this.width, this.y + this.height, this.lIIIIlIIllIIlIIlIIIlIIllI);
         }
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 1.4666667f * 0.23863636f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.IlllIllIlIIIIlIIlIIllIIIl, 2.2f * 1.1363636f, (float)(this.x + 6), (float)this.y + (float)6);
+        RenderUtil.drawIcon(this.IlllIllIlIIIIlIIlIIllIIIl, 2.2f * 1.1363636f, (float)(this.x + 6), (float)this.y + (float)6);
         CheatBreaker.getInstance().playBold18px.drawString("CheatBreaker Settings".toUpperCase(), (float)this.x + (float)14, (float)this.y + (float)3, -818991313);
     }
 

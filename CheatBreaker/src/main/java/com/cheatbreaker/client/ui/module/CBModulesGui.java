@@ -765,10 +765,10 @@ public class CBModulesGui extends GuiScreen {
             int n8 = n4 = (float)n > (object[0] + cBModule.width - (float)10) * (Float) cBModule.scale.getValue() && (float)n < (object[0] + cBModule.width - 2.0f) * ((Float)cBModule.scale.getValue()).floatValue() && (float)n2 > (object[1] + cBModule.height - (float)8) * ((Float)cBModule.scale.getValue()).floatValue() && (float)n2 < (object[1] + cBModule.height - 2.0f) * ((Float)cBModule.scale.getValue()).floatValue() ? 1 : 0;
             if (!cBModule.getSettingsList().isEmpty()) {
                 GL11.glColor4f(1.0f, 1.0f, 1.0f, n5 != 0 ? 1.0f : 0.20895523f * 2.8714287f);
-                RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.cogIcon, (float)3, 2.0f, cBModule.height - 2.162162f * 3.4687502f);
+                RenderUtil.drawIcon(this.cogIcon, (float)3, 2.0f, cBModule.height - 2.162162f * 3.4687502f);
             }
             GL11.glColor4f(1.2952381f * 0.61764705f, 0.4181818f * 0.47826087f, 0.09268292f * 2.1578948f, n4 != 0 ? 1.0f : 2.025f * 0.2962963f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.deleteIcon, (float)3, cBModule.width - (float)8, cBModule.height - 0.2972973f * 25.227272f);
+            RenderUtil.drawIcon(this.deleteIcon, (float)3, cBModule.width - (float)8, cBModule.height - 0.2972973f * 25.227272f);
         }
         GL11.glPushMatrix();
         float f3 = f / (Float) cBModule.scale.getValue();

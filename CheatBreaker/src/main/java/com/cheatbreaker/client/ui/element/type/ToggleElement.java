@@ -52,9 +52,9 @@ public class ToggleElement
             Gui.drawRect(this.x + this.width - 22, this.y + 2, this.x + this.width + 4, this.y + 12, -723724);
         }
         GL11.glColor4f(0.0f, 0.0f, 0.0f, bl2 ? 0.74000007f * 1.081081f : 0.288f * 1.5625f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.IllIIIIIIIlIlIllllIIllIII, (float) 4, (float) (this.x + this.width - 82), (float) (this.y + 3));
+        RenderUtil.drawIcon(this.IllIIIIIIIlIlIllllIIllIII, (float) 4, (float) (this.x + this.width - 82), (float) (this.y + 3));
         GL11.glColor4f(0.0f, 0.0f, 0.0f, bl ? 0.4244898f * 1.8846154f : 0.64285713f * 0.7f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.lIIIIllIIlIlIllIIIlIllIlI, (float) 4, (float) (this.x + this.width - 22), (float) (this.y + 3));
+        RenderUtil.drawIcon(this.lIIIIllIIlIlIllIIIlIllIlI, (float) 4, (float) (this.x + this.width - 22), (float) (this.y + 3));
     }
 
     @Override

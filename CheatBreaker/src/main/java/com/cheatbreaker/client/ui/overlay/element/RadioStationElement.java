@@ -35,7 +35,7 @@ public class RadioStationElement
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
         boolean bl3 = CheatBreaker.getInstance().getRadioManager().getCurrentStation() == this.station;
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(bl2 ? this.startFilledIcon : this.starIcon, (float)5, this.width + (float)6, this.height + (float)5);
+        RenderUtil.drawIcon(bl2 ? this.startFilledIcon : this.starIcon, (float)5, this.width + (float)6, this.height + (float)5);
         CheatBreaker.getInstance().playRegular14px.drawString(this.station.getName(), this.x + (float)24, this.y + 0.627451f * 2.390625f, bl3 ? -13369549 : -1);
         CheatBreaker.getInstance().playRegular12px.drawString(this.station.getGenre(), this.x + (float)24, this.y + 2.375f * 4.0f, -1342177281);
     }

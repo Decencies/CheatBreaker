@@ -31,7 +31,7 @@ public class RenderUtil {
         GL11.glScissor(n * n5, n8 * n5, n7 * n5, n6 * n5);
     }
 
-    public static void lIIIIlIIllIIlIIlIIIlIIllI(ResourceLocation resourceLocation, float f, float f2, float f3) {
+    public static void drawIcon(ResourceLocation resourceLocation, float f, float f2, float f3) {
         float f4 = f * 2.0f;
         float f5 = f * 2.0f;
         float f6 = 0.0f;

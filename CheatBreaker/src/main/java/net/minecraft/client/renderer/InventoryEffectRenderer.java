@@ -2,6 +2,8 @@ package net.minecraft.client.renderer;
 
 import java.util.Collection;
 import java.util.Iterator;
+
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
@@ -26,7 +28,7 @@ public abstract class InventoryEffectRenderer extends GuiContainer
     {
         super.initGui();
 
-        if (!this.mc.thePlayer.getActivePotionEffects().isEmpty())
+        if (!this.mc.thePlayer.getActivePotionEffects().isEmpty() && (boolean) CheatBreaker.getInstance().getGlobalSettings().showPotionInfo.getValue())
         {
             this.field_147003_i = 160 + (this.width - this.field_146999_f - 200) / 2;
             this.field_147045_u = true;
@@ -40,7 +42,7 @@ public abstract class InventoryEffectRenderer extends GuiContainer
     {
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
 
-        if (this.field_147045_u)
+        if (this.field_147045_u && (boolean) CheatBreaker.getInstance().getGlobalSettings().showPotionInfo.getValue())
         {
             this.func_147044_g();
         }

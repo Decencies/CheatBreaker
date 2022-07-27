@@ -84,9 +84,9 @@ public class ChoiceElement
             Gui.drawRect(this.x + this.width - 22, this.y + 2, this.x + this.width + 4, this.y + 12, -723724);
         }
         GL11.glColor4f(0.0f, 0.0f, 0.0f, leftHovered ? 0.6857143f * 1.1666666f : 0.5416667f * 0.8307692f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.leftIcon, (float)4, (float)(this.x + this.width - 82), (float)(this.y + 4));
+        RenderUtil.drawIcon(this.leftIcon, (float)4, (float)(this.x + this.width - 82), (float)(this.y + 4));
         GL11.glColor4f(0.0f, 0.0f, 0.0f, rightHovered ? 0.82580644f * 0.96875f : 3.3793104f * 0.13316326f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.rightIcon, (float)4, (float)(this.x + this.width - 22), (float)(this.y + 4));
+        RenderUtil.drawIcon(this.rightIcon, (float)4, (float)(this.x + this.width - 22), (float)(this.y + 4));
     }
 
     @Override

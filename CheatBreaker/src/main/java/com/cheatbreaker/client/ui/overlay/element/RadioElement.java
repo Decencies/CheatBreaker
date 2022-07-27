@@ -91,13 +91,13 @@ public class RadioElement extends DraggableElement {
             }
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             ResourceLocation resourceLocation = station.currentResource == null ? this.dashIcon : station.currentResource;
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(resourceLocation, this.IlIlllIIIIllIllllIllIIlIl / 2.0f, this.x, this.y);
+            RenderUtil.drawIcon(resourceLocation, this.IlIlllIIIIllIllllIllIIlIl / 2.0f, this.x, this.y);
             float f3 = this.x + (float)50;
             if (this.mc.currentScreen == OverlayGui.getInstance()) {
                 boolean bl2 = this.isMouseInside(f, f2) && f > this.x + (float)34 && f < this.x + (float)44 && f2 < this.y + this.IlIlllIIIIllIllllIllIIlIl;
                 if (!DashUtil.isPlayerNotNull()) {
                     GL11.glColor4f(1.0f, 1.0f, 1.0f, bl2 ? 1.0f : 0.8f);
-                    RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.playIcon, (float)6, this.x + (float)34, this.y + 7.5f);
+                    RenderUtil.drawIcon(this.playIcon, (float)6, this.x + (float)34, this.y + 7.5f);
                 } else {
                     // pause icon when??? jhalt
                     Gui.drawRect(this.x + (float)36, this.y + (float)9, this.x + (float)38, this.y + this.IlIlllIIIIllIllllIllIIlIl - (float)11, bl2 ? -1 : -1342177281);

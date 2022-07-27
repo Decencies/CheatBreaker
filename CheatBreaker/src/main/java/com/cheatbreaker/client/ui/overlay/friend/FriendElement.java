@@ -57,7 +57,7 @@ public class FriendElement extends AbstractElement {
         Gui.drawRect(this.x + (float)4, this.y + (float)3, this.x + (float)20, this.y + (float)19, this.friend.isOnline() ? Friend.getStatusColor(this.friend.getOnlineStatus()) : -13158601);
         if (this.friend.getName().startsWith(EnumChatFormatting.RED.toString())) {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(cheatBreakerIcon, 6.5f, this.x + (float)24, this.y + (float)4);
+            RenderUtil.drawIcon(cheatBreakerIcon, 6.5f, this.x + (float)24, this.y + (float)4);
             CheatBreaker.getInstance().playRegular16px.drawString(this.friend.getName(), this.x + (float)40, this.y + 2.0f, -1);
             CheatBreaker.getInstance().playRegular16px.drawString(this.friend.getStatusString(), this.x + (float)40, this.y + (float)11, -5460820);
         } else {
@@ -66,7 +66,7 @@ public class FriendElement extends AbstractElement {
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         ResourceLocation headLocation = CheatBreaker.getInstance().getHeadLocation(EnumChatFormatting.getTextWithoutFormattingCodes(this.friend.getName()), this.friend.getPlayerId());
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(headLocation, (float)7, this.x + (float)5, this.y + (float)4);
+        RenderUtil.drawIcon(headLocation, (float)7, this.x + (float)5, this.y + (float)4);
         boolean bl2 = bl && this.isMouseInside(f, f2) && f > this.x + this.width - (float)20;
         float f3 = this.lIIIIllIIlIlIllIIIlIllIlI.lIIIIlIIllIIlIIlIIIlIIllI(bl2);
         float f4 = this.x + this.width - 20.5f * f3;
