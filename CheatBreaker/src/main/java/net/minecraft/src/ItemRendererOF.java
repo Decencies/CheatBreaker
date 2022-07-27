@@ -1,6 +1,8 @@
 package net.minecraft.src;
 
 import java.lang.reflect.Field;
+
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -129,7 +131,7 @@ public class ItemRendererOF extends ItemRenderer
                 renderEffect = par2ItemStack.hasEffect() && par3 == 0;
             }
 
-            if (renderEffect)
+            if (renderEffect && (boolean) CheatBreaker.getInstance().getGlobalSettings().enchantmentGlint.getValue())
             {
                 GL11.glDepthFunc(GL11.GL_EQUAL);
                 GL11.glDisable(GL11.GL_LIGHTING);
