@@ -1,5 +1,6 @@
 package net.minecraft.client.settings;
 
+import com.cheatbreaker.client.CheatBreaker;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
@@ -278,7 +279,10 @@ public class GameSettings
     public String language;
     public boolean forceUnicodeFont;
 
-
+    public float getGamma() {
+        return (Boolean) CheatBreaker.getInstance().getGlobalSettings().enableFpsBoost.getValue() &&
+                (Boolean) CheatBreaker.getInstance().getGlobalSettings().fullBright.getValue() ? 100.0f : this.gammaSetting;
+    }
 
     public GameSettings(Minecraft par1Minecraft, File par2File)
     {

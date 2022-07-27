@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelmap;
 
+import com.cheatbreaker.client.CheatBreaker;
 import com.thevoxelbox.voxelmap.gui.GuiMinimapOptions;
 import com.thevoxelbox.voxelmap.gui.GuiScreenAddWaypoint;
 import com.thevoxelbox.voxelmap.gui.overridden.EnumOptionsMinimap;
@@ -497,9 +498,9 @@ public class Map implements Runnable, IMap {
         if (!this.haveRenderManager) {
             return;
         }
-        if (this.game.gameSettings.gammaSetting != this.lastGamma) {
+        if (this.game.gameSettings.getGamma() != this.lastGamma) {
             this.needLight = true;
-            this.lastGamma = this.game.gameSettings.gammaSetting;
+            this.lastGamma = this.game.gameSettings.getGamma();
         }
         for (int t = 0; t < 16; t++) {
             if (this.world.provider.lightBrightnessTable[t] != this.lastLightBrightnessTable[t]) {
@@ -1571,7 +1572,7 @@ public class Map implements Runnable, IMap {
         if (solid) {
             i3 = 0;
         } else if ((color24 != this.colorManager.getAirColor()) && (color24 != 0) &&
-                (this.options.lightmap)) {
+                (this.options.lightmap) || (Boolean) CheatBreaker.getInstance().getGlobalSettings().enableFpsBoost.getValue() && (Boolean) CheatBreaker.getInstance().getGlobalSettings().fullBright.getValue()) {
             Chunk chunk = world.getChunkFromBlockCoords(x, z);
             int blockLight = chunk
                     .getSavedLightValue(EnumSkyBlock.Block, x & 0xF, Math.max(Math.min(height, 255), 0), z & 0xF);
