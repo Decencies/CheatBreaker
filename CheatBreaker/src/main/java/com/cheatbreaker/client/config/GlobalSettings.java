@@ -70,6 +70,7 @@ public class GlobalSettings {
     private Setting colorOptionsLabel;
     public Setting defaultColor;
     // what is this xd
+    // Nox: apparently, CheatBreaker code, Decencies.
     public List<ColorPickerColorElement> favouriteColors = new ArrayList<>();
     public List<ColorPickerColorElement> IlIIlIIlIllIIIIllIIllIlIl = new ArrayList<>();
 
