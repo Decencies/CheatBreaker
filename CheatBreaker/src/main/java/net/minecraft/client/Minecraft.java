@@ -177,7 +177,7 @@ public class Minecraft implements IPlayerUsage
     private final File fileResourcepacks;
     private final Multimap field_152356_J;
     public ServerData currentServerData; //CheatBreaker
-    private TextureManager renderEngine;
+    public TextureManager renderEngine;
     private static Minecraft theMinecraft;
     public PlayerControllerMP playerController;
     private boolean fullscreen;

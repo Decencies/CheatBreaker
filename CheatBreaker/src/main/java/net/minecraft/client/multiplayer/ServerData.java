@@ -32,7 +32,12 @@ public class ServerData
     private ServerData.ServerResourceMode field_152587_j;
     private String field_147411_m;
     private boolean field_152588_l;
+    public boolean continueOnSave = false;
 
+    public ServerData(boolean continueOnSave, String name, String address) {
+        this(name, address);
+        this.continueOnSave = continueOnSave;
+    }
 
     public ServerData(String p_i1193_1_, String p_i1193_2_)
     {

@@ -20,8 +20,8 @@ public class GlobalSettings {
     public KeyBinding dragLook;
     public KeyBinding hideNames;
     public final List<Setting> settingsList = new ArrayList<>();
-    private List<String[]> pinnedServers;
-    private List<String> warnedServers;
+    public List<String[]> pinnedServers;
+    public List<String> warnedServers;
     public boolean isDebug = true;
     public String crashReportURL = "https://cheatbreaker.com/crash-report-upload";
     public String debugUploadURL = "https://cheatbreaker.com/debug-upload";
