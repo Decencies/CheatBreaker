@@ -36,7 +36,7 @@ public class CosmeticListElement extends AbstractModulesGuiElement {
             RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(0.0f, 0.0f, 2.0f, (float)7, 44, 120);
             GL11.glPopMatrix();
         } else {
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.cosmetic.getPreviewLocation(), (float)8, (float)(this.x + 20), (float)(this.y + 7));
+            RenderUtil.drawIcon(this.cosmetic.getPreviewLocation(), (float)8, (float)(this.x + 20), (float)(this.y + 7));
         }
         CheatBreaker.getInstance().playRegular14px.drawString(this.cosmetic.getName().replace("_", " ").toUpperCase(), this.x + 42, (float)(this.y + this.height / 2 - 5), -1342177281);
         if (this.cosmetic.isEquipped()) {

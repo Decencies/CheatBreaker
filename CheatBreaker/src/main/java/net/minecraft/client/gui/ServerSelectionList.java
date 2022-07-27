@@ -1,9 +1,12 @@
 package net.minecraft.client.gui;
 
+import com.cheatbreaker.client.CheatBreaker;
+import com.cheatbreaker.client.ui.serverlist.PinnedServerEntry;
 import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.LanServerDetector;
 
@@ -70,7 +73,12 @@ public class ServerSelectionList extends GuiListExtended
 
         for (int var2 = 0; var2 < p_148195_1_.countServers(); ++var2)
         {
-            this.field_148198_l.add(new ServerListEntryNormal(this.field_148200_k, p_148195_1_.getServerData(var2)));
+            ServerData serverData = p_148195_1_.getServerData(var2);
+            if (serverData.continueOnSave) {
+                this.field_148198_l.add(new PinnedServerEntry(this.field_148200_k, serverData));
+            } else if (!CheatBreaker.getInstance().getGlobalSettings().pinnedServers.stream().anyMatch((var1x) -> var1x[1].equalsIgnoreCase(serverData.serverIP))) {
+                this.field_148198_l.add(new ServerListEntryNormal(this.field_148200_k, serverData));
+            }
         }
     }
 

@@ -58,7 +58,7 @@ public class MainMenuBase extends AbstractGui {
         this.languageButton = new IconButtonElement(6, new ResourceLocation("client/icons/globe-24.png"));
         this.accountButtonWidth = CheatBreaker.getInstance().robotoRegular13px.getStringWidth(Minecraft.getMinecraft().getSession().getUsername());
         this.IlllIllIlIIIIlIIlIIllIIIl = new AccountList(this, Minecraft.getMinecraft().getSession().getUsername(), CheatBreaker.getInstance().getHeadLocation(Minecraft.getMinecraft().getSession().getUsername(), Minecraft.getMinecraft().getSession().getPlayerID()));
-        this.loadAccounts();
+        //this.loadAccounts();
     }
 
     /*
@@ -148,7 +148,7 @@ public class MainMenuBase extends AbstractGui {
         Color color = this.IllIlIIIIlllIIllIIlllIIlI.lIIIIIIIIIlIllIIllIlIIlIl(bl);
         CheatBreaker.getInstance().robotoRegular24px.drawCenteredString("CheatBreaker", 37, (float) 9, color.getRGB());
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.logo, (float) 10, (float) 8, (float) 6);
+        RenderUtil.drawIcon(this.logo, (float) 10, (float) 8, (float) 6);
         CheatBreaker.getInstance().robotoRegular24px.drawString("CheatBreaker", 36, (float) 8, -1);
         String string = "CheatBreaker Dev (" + CheatBreaker.getInstance().getGitCommit() + "/" + CheatBreaker.getInstance().getGitBranch() + ")";
         CheatBreaker.getInstance().playRegular18px.drawStringWithShadow(string, (float) 5, this.getScaledHeight() - (float) 14, -1879048193);

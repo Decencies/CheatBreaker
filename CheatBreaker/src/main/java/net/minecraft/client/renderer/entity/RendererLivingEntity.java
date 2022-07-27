@@ -1,6 +1,8 @@
 package net.minecraft.client.renderer.entity;
 
 import java.util.Random;
+
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -174,8 +176,7 @@ public abstract class RendererLivingEntity extends Render
                         this.renderPassModel.render(p_76986_1_, var16, var15, var13, var11 - var10, var26, var14);
                     }
 
-                    if ((var18 & 15) == 15)
-                    {
+                    if ((var18 & 15) == 15 && (boolean) CheatBreaker.getInstance().getGlobalSettings().enchantmentGlint.getValue()) {
                         var19 = (float)p_76986_1_.ticksExisted + p_76986_9_;
                         this.bindTexture(RES_ITEM_GLINT);
                         GL11.glEnable(GL11.GL_BLEND);

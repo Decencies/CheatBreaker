@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 public class PotionStatusModule extends AbstractModule {
 
-    public final Setting showInInventory;
+    //public final Setting showInInventory;
     private final Setting showWhileTying;
     private final Setting showEffectName;
     private final Setting colorOptionsLabel;
@@ -39,7 +39,8 @@ public class PotionStatusModule extends AbstractModule {
         {
             this.showWhileTying = new Setting(this, "Show While Typing").setValue(true);
             this.showEffectName = new Setting(this, "Effect Name").setValue(true);
-            this.showInInventory = new Setting(this, "Show Potion info in inventory").setValue(false);
+            //this.showInInventory = new Setting(this, "Show Potion info in inventory").setValue(false);
+            // commented out due to there being two of the same option.
         }
         new Setting(this, "label").setValue("Blink Options");
         {

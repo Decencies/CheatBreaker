@@ -47,7 +47,7 @@ public class AliasesElement
     protected void handleElementDraw(float f, float f2, boolean bl) {
         this.drag(f, f2);
         this.scrollContainer.drawScrollable(f, f2, bl);
-        Gui.lIIIIIIIIIlIllIIllIlIIlIl(this.x, this.y, this.x + this.width, this.y + this.height, 0.06666667f * 7.5f, -16777216, -14869219);
+        Gui.drawBoxWithOutLine(this.x, this.y, this.x + this.width, this.y + this.height, 0.06666667f * 7.5f, -16777216, -14869219);
         CheatBreaker.getInstance().playRegular16px.drawString(this.friend.getName(), this.x + (float)4, this.y + (float)4, -1);
         Gui.drawRect(this.x + (float)3, this.y + (float)15, this.x + this.width - (float)3, this.y + 0.9791667f * 15.829787f, 0x2FFFFFFF);
         if (this.aliases.isEmpty()) {

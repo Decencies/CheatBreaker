@@ -30,7 +30,7 @@ public class CBModulePlaceGui extends GuiScreen {
         RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.width / 3f, 0.0, (float)(this.width / 3) + 0.42073172f * 1.1884058f, this.height, 0.0, 0x6F000000);
         RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.width / 3f * 2, 0.0, (float)(this.width / 3 * 2) + 0.28070176f * 1.78125f, this.height, 0.0, 0x6F000000);
         RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.width / 3f + this.width / 6f, this.height / 3f * 2, (float)(this.width / 3 + this.width / 6) + 6.7000003f * 0.07462686f, this.height, 0.0, 0x6F000000);
-        float f2 = 1.0f / CheatBreaker.getScaleFactor();
+        float f2 = 1.0f / CheatBreaker.getInstance().getScaleFactor();
         float f3 = (float)(CheatBreaker.getInstance().ubuntuMedium16px.getStringWidth(this.module.getName()) + 6) * f2;
         if (this.module.width < f3) {
             this.module.width = (int)f3;

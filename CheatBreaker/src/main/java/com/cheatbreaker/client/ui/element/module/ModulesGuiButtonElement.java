@@ -57,7 +57,7 @@ public class ModulesGuiButtonElement
         if (this.displayString.contains(".png")) {
             GL11.glPushMatrix();
             GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.47368422f * 0.9499999f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(new ResourceLocation("client/icons/" + this.displayString), (float)8, (float)(this.x + 6), (float)(this.y + 6));
+            RenderUtil.drawIcon(new ResourceLocation("client/icons/" + this.displayString), (float)8, (float)(this.x + 6), (float)(this.y + 6));
             GL11.glPopMatrix();
         } else {
             // IIIllIllIlIlllllllIlIlIII = Fontrenderer

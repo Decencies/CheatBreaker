@@ -1,11 +1,13 @@
 package net.minecraft.client.gui;
 
+import com.cheatbreaker.client.CheatBreaker;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.util.List;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.LanServerDetector;
 import net.minecraft.client.network.OldServerPinger;
 import net.minecraft.client.resources.I18n;
@@ -378,6 +380,11 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 
     private void func_146791_a(ServerData p_146791_1_)
     {
+        // just to prevent connecting to more than one fucking server lmao
+        if (this.mc.currentServerData != null && this.mc.theWorld != null) {
+            this.mc.theWorld.sendQuittingDisconnectingPacket();
+            this.mc.loadWorld(null);
+        }
         this.mc.displayGuiScreen(new GuiConnecting(this, this.mc, p_146791_1_));
     }
 

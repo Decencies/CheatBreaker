@@ -4,6 +4,7 @@ import com.cheatbreaker.client.config.Setting;
 import com.cheatbreaker.client.event.type.GuiDrawEvent;
 import com.cheatbreaker.client.module.AbstractModule;
 import com.cheatbreaker.client.ui.module.CBGuiAnchor;
+import net.minecraft.MinecraftMovementInputHelper;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.opengl.GL11;
 
@@ -18,17 +19,19 @@ public class ToggleSprintModule extends AbstractModule {
     public static Setting showWhileTyping;
     private Setting flyBoostLabel;
     public static Setting flyBoostAmount;
-    public Setting renderHud;
-    public Setting settingsList;
-    public Setting defaultSettingsValues;
-    public Setting eventMap;
-    public Setting previewType;
-    public Setting previewIconLocation;
-    public Setting previewIconWidth;
-    public Setting previewIconHeight;
-    public Setting previewLabelSize;
-    public Setting previewLabel;
-    public static boolean lIIIIIllllIIIIlIlIIIIlIlI;
+    public Setting flyBoostString;
+    public Setting flyString;
+
+    public Setting ridingString;
+    public Setting decendString;
+    public Setting dismountString;
+    public Setting sneakHeldString;
+    public Setting sprintHeldString;
+    public Setting sprintVanillaString;
+    public Setting sprintToggledString;
+    public Setting sneakToggledString;
+
+    public static boolean buggedSprint;
 
     public ToggleSprintModule() {
         super("ToggleSprint");
@@ -45,16 +48,17 @@ public class ToggleSprintModule extends AbstractModule {
         this.flyBoostLabel = new Setting(this, "label").setValue("Fly Boost");
         flyBoost = new Setting(this, "Fly Boost").setValue(true);
         flyBoostAmount = new Setting(this, "Fly Boost Amount").setValue(4).setMinMax(2, 8).setParent(flyBoost);
-        this.renderHud = new Setting(this, "Fly Boost String").setValue("[Flying (%BOOST%x boost)]");
-        this.settingsList = new Setting(this, "Fly String").setValue("[Flying]");
-        this.defaultSettingsValues = new Setting(this, "Riding String").setValue("[Riding]");
-        this.eventMap = new Setting(this, "Descend String").setValue("[Descending]");
-        this.previewType = new Setting(this, "Dismount String").setValue("[Dismounting]");
-        this.previewIconLocation = new Setting(this, "Sneaking String").setValue("[Sneaking (Key Held)]");
-        this.previewIconWidth = new Setting(this, "Sprinting Held String").setValue("[Sprinting (Key Held)]");
-        this.previewIconHeight = new Setting(this, "Sprinting Vanilla String").setValue("[Sprinting (Vanilla)]");
-        this.previewLabelSize = new Setting(this, "Sprinting Toggle String").setValue("[Sprinting (Toggled)]");
-        this.previewLabel = new Setting(this, "Sneaking Toggle String").setValue("[Sneaking (Toggled)]");
+
+        this.flyBoostString = new Setting(this, "Fly Boost String").setValue("[Flying (%BOOST%x boost)]");
+        this.flyString = new Setting(this, "Fly String").setValue("[Flying]");
+        this.ridingString = new Setting(this, "Riding String").setValue("[Riding]");
+        this.decendString = new Setting(this, "Descend String").setValue("[Descending]");
+        this.dismountString = new Setting(this, "Dismount String").setValue("[Dismounting]");
+        this.sneakHeldString = new Setting(this, "Sneaking String").setValue("[Sneaking (Key Held)]");
+        this.sprintHeldString = new Setting(this, "Sprinting Held String").setValue("[Sprinting (Key Held)]");
+        this.sprintVanillaString = new Setting(this, "Sprinting Vanilla String").setValue("[Sprinting (Vanilla)]");
+        this.sprintToggledString = new Setting(this, "Sprinting Toggle String").setValue("[Sprinting (Toggled)]");
+        this.sneakToggledString = new Setting(this, "Sneaking Toggle String").setValue("[Sneaking (Toggled)]");
         this.setPreviewLabel("[Sprinting (Toggled)]", 1.0f);
         this.addEvent(GuiDrawEvent.class, this::renderReal);
     }
@@ -65,10 +69,10 @@ public class ToggleSprintModule extends AbstractModule {
         }
         if ((Boolean) showHudText.getValue() && ((Boolean) showWhileTyping.getValue() || !(this.minecraft.currentScreen instanceof GuiChat))) {
             GL11.glPushMatrix();
-            int n = this.minecraft.fontRenderer.getStringWidth(ToggleSprintHandler.IlIlIIIlllIIIlIlllIlIllIl);
+            int n = this.minecraft.fontRenderer.getStringWidth(MinecraftMovementInputHelper.toggleSprintString);
             this.setDimensions(n, 18);
             this.scaleAndTranslate(guiDrawEvent.getResolution());
-            this.minecraft.fontRenderer.drawStringWithShadow(ToggleSprintHandler.IlIlIIIlllIIIlIlllIlIllIl, 0.0f, 0.0f, this.textColor.getColorValue());
+            this.minecraft.fontRenderer.drawStringWithShadow(MinecraftMovementInputHelper.toggleSprintString, 0.0f, 0.0f, this.textColor.getColorValue());
             GL11.glPopMatrix();
         } else {
             this.setDimensions(50, 18);
@@ -76,7 +80,7 @@ public class ToggleSprintModule extends AbstractModule {
     }
 
     static {
-        lIIIIIllllIIIIlIlIIIIlIlI = false;
+        buggedSprint = false;
     }
     
 }

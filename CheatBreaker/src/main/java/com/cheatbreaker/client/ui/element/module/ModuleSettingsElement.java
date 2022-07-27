@@ -50,7 +50,7 @@ public class ModuleSettingsElement extends AbstractModulesGuiElement {
             }
         }
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 1.4385965f * 0.24329267f);
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.rightIcon, 1.9411765f * 1.2878788f, (float)(this.x + 6), (float)this.y + (float)6);
+        RenderUtil.drawIcon(this.rightIcon, 1.9411765f * 1.2878788f, (float)(this.x + 6), (float)this.y + (float)6);
         CheatBreaker.getInstance().playBold18px.drawString(this.module.getName().toUpperCase(), (float)this.x + (float)14, (float)this.y + (float)3, this.parent.lIIIIlIIllIIlIIlIIIlIIllI(this.module) ? -818991313 : 0x2F2F2F2F);
     }
 

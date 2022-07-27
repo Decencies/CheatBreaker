@@ -39,7 +39,7 @@ public class FriendRequestElement extends AbstractElement {
         }
         GL11.glColor4f((float)1.0f, (float)1.0f, (float)1.0f, (float)1.0f);
         ResourceLocation resourceLocation = CheatBreaker.getInstance().getHeadLocation(EnumChatFormatting.getTextWithoutFormattingCodes(this.friendRequest.getUsername()), this.friendRequest.getPlayerId());
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(resourceLocation, (float)7, this.x + (float)5, this.y + (float)4);
+        RenderUtil.drawIcon(resourceLocation, (float)7, this.x + (float)5, this.y + (float)4);
         GL11.glPopMatrix();
     }
 

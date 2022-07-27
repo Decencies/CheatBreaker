@@ -15,9 +15,11 @@ import java.util.List;
 
 public class ModuleManager {
 
-    public ToggleSprintModule toggleSprint;
     public List<AbstractModule> modules;
     public List<AbstractModule> staffModules;
+    public AbstractModule llIIlllIIIIlllIllIlIlllIl;
+
+    public ToggleSprintModule toggleSprint;
     public MiniMapModule minmap;
     public CBNotificationsModule notifications;
     public ArmourStatusModule armourStatus;
@@ -27,7 +29,6 @@ public class ModuleManager {
     public PotionStatusModule potionStatus;
     public BossBarModule bossBar;
     public DirectionHudModule directionHud;
-    public AbstractModule llIIlllIIIIlllIllIlIlllIl;
     public KeystrokesModule keyStrokes;
     public FPSModule fpsModule;
     public CPSModule cpsModule;
@@ -38,26 +39,28 @@ public class ModuleManager {
     public ModuleManager() {
         modules = new ArrayList<>();
         staffModules = new ArrayList<>();
-        staffModules.add(xray = new XRayModule());
-        modules.add(minmap = new MiniMapModule());
-        modules.add(notifications = new CBNotificationsModule());
-        modules.add(armourStatus = new ArmourStatusModule());
-        modules.add(cooldowns = new CooldownsModule());
-        modules.add(scoreboard = new ScoreboardModule());
-        modules.add(potionStatus = new PotionStatusModule());
-        modules.add(keyStrokes = new KeystrokesModule());
-        modules.add(fpsModule = new FPSModule());
-        modules.add(cpsModule = new CPSModule());
+
         modules.add(coordinatesModule = new CoordinatesModule());
+        modules.add(minmap = new MiniMapModule());
+        modules.add(toggleSprint = new ToggleSprintModule());
+        modules.add(potionStatus = new PotionStatusModule());
+        modules.add(armourStatus = new ArmourStatusModule());
+        modules.add(keyStrokes = new KeystrokesModule());
+        modules.add(scoreboard = new ScoreboardModule());
+        modules.add(cooldowns = new CooldownsModule());
+        modules.add(notifications = new CBNotificationsModule());
         modules.add(directionHud = new DirectionHudModule());
-        for (AbstractModule staffModule : staffModules) {
-            staffModule.setStaffModuleEnabled(true);
-        }
-        modules.add((this.bossBar = new BossBarModule()));
-        modules.add((this.toggleSprint = new ToggleSprintModule()));
+        modules.add(bossBar = new BossBarModule());
+        modules.add(cpsModule = new CPSModule());
+        modules.add(fpsModule = new FPSModule());
         this.voiceChat = new VoiceChat();
         this.teammatesModule = new TeammatesModule();
         this.teammatesModule.lIIIIlIIllIIlIIlIIIlIIllI(true);
+
+        staffModules.add(xray = new XRayModule());
+        for (AbstractModule staffModule : staffModules) {
+            staffModule.setStaffModuleEnabled(true);
+        }
     }
 
 }

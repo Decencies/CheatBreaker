@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockLiquid;
@@ -3145,6 +3147,9 @@ public abstract class World implements IBlockAccess
 
     public boolean updateLightByType(EnumSkyBlock p_147463_1_, int p_147463_2_, int p_147463_3_, int p_147463_4_)
     {
+        if ((Boolean) CheatBreaker.getInstance().getGlobalSettings().enableFpsBoost.getValue() && (Boolean) CheatBreaker.getInstance().getGlobalSettings().fullBright.getValue()) {
+            return true;
+        }
         if (!this.doChunksNearChunkExist(p_147463_2_, p_147463_3_, p_147463_4_, 17))
         {
             return false;

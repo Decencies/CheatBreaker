@@ -98,15 +98,15 @@ public class NetHandler implements ICBNetHandler, ICBNetHandlerClient {
         try {
             if (pluginMessageEvent.getChannel().equals("REGISTER")) {
                 String string = new String(pluginMessageEvent.getPayload(), Charsets.UTF_8);
-                this.lIIIIIIIIIlIllIIllIlIIlIl = string.contains(CheatBreaker.getInstance().clientString());
-                this.serverHandlesWaypoints = string.contains(CheatBreaker.getInstance().binaryString());
+                this.lIIIIIIIIIlIllIIllIlIIlIl = string.contains(CheatBreaker.getInstance().getPluginMessageChannel());
+                this.serverHandlesWaypoints = string.contains(CheatBreaker.getInstance().getPluginBinaryChannel());
                 PacketBuffer lIlIllllllllIlIIIllIIllII2 = new PacketBuffer(Unpooled.buffer());
-                lIlIllllllllIlIIIllIIllII2.writeBytes(CheatBreaker.getInstance().clientString().getBytes(Charsets.UTF_8));
+                lIlIllllllllIlIIIllIIllII2.writeBytes(CheatBreaker.getInstance().getPluginMessageChannel().getBytes(Charsets.UTF_8));
                 if (Minecraft.getMinecraft().getNetHandler() != null && this.lIIIIIIIIIlIllIIllIlIIlIl) {
                     Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C17PacketCustomPayload("REGISTER", lIlIllllllllIlIIIllIIllII2));
                 }
                 this.initialize();
-            } else if (pluginMessageEvent.getChannel().equals(CheatBreaker.getInstance().clientString())) {
+            } else if (pluginMessageEvent.getChannel().equals(CheatBreaker.getInstance().getPluginMessageChannel())) {
                 Packet packet = Packet.handle(this, pluginMessageEvent.getPayload());
                 if (CheatBreaker.getInstance().getGlobalSettings().isDebug) {
                     ChatComponentText chatComponentText = new ChatComponentText( "[CB] ");
@@ -476,7 +476,7 @@ public class NetHandler implements ICBNetHandler, ICBNetHandlerClient {
             ((ChatComponentStyle)object).appendSibling(chatComponentText);
             Minecraft.getMinecraft().ingameGUI.getChatGUI().func_146227_a((IChatComponent)object);
         }
-        object = new C17PacketCustomPayload(CheatBreaker.getInstance().clientString(), Packet.getPacketData(packet));
+        object = new C17PacketCustomPayload(CheatBreaker.getInstance().getPluginMessageChannel(), Packet.getPacketData(packet));
         Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue((net.minecraft.network.Packet) object);
     }
 }

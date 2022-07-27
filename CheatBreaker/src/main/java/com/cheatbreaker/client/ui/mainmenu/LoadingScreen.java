@@ -40,7 +40,7 @@ public class LoadingScreen extends AbstractGui {
         float f = 27.0f;
         double d3 = d / 2.0 - (double) f;
         double d4 = d2 / 2.0 - (double) f;
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.logo, f, (float) d3, (float) d4);
+        RenderUtil.drawIcon(this.logo, f, (float) d3, (float) d4);
     }
 
     private void clearMenu() {

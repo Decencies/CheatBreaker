@@ -45,7 +45,7 @@ public class ModulePreviewContainer
             ++n4;
             n3 = 0;
         }
-        this.IlllIllIlIIIIlIIlIIllIIIl = 4 + n4 * 112 + 112;
+        this.IlllIllIlIIIIlIIlIIllIIIl = 4 + n4 * 112;
         this.postDraw(mouseX, mouseY);
     }
 

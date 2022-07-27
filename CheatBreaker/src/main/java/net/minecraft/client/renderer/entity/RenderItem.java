@@ -312,7 +312,7 @@ public class RenderItem extends Render
                 GL11.glColor4f(p_77020_5_, p_77020_6_, p_77020_7_, 1.0F);
                 ItemRenderer.renderItemIn2D(var8, var26, var11, var25, var12, ((IIcon)p_77020_2_).getIconWidth(), ((IIcon)p_77020_2_).getIconHeight(), var16);
 
-                if (var18.hasEffect())
+                if (var18.hasEffect() && (boolean) CheatBreaker.getInstance().getGlobalSettings().enchantmentGlint.getValue())
                 {
                     GL11.glDepthFunc(GL11.GL_EQUAL);
                     GL11.glDisable(GL11.GL_LIGHTING);
@@ -562,7 +562,7 @@ public class RenderItem extends Render
                 throw new ReportedException(var7);
             }
 
-            if (p_82406_3_.hasEffect())
+            if (p_82406_3_.hasEffect() && (boolean) CheatBreaker.getInstance().getGlobalSettings().enchantmentGlint.getValue())
             {
                 GL11.glDepthFunc(GL11.GL_EQUAL);
                 GL11.glDisable(GL11.GL_LIGHTING);

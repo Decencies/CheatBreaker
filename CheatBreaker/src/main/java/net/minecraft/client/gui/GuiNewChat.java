@@ -97,7 +97,7 @@ public class GuiNewChat extends Gui
                                 byte var15 = 0;
                                 int var16 = -var9 * 9;
                                 drawRect(var15, var16 - 9, var15 + var8 + 4, var16,
-                                        (Boolean)CheatBreaker.getInstance().globalSettings.showChatBackground.getValue() ? 50331648 : var14 / 2 << 24);
+                                        !(Boolean)CheatBreaker.getInstance().globalSettings.showChatBackground.getValue() ? 50331648 : var14 / 2 << 24);
                                 String var17 = var10.func_151461_a().getFormattedText();
                                 this.field_146247_f.fontRenderer.drawStringWithShadow(var17, var15, var16 - 8, 16777215 + (var14 << 24));
                                 GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -119,8 +119,8 @@ public class GuiNewChat extends Gui
                     {
                         var14 = var19 > 0 ? 170 : 96;
                         int var20 = this.field_146251_k ? 13382451 : 3355562;
-                        drawRect(0, -var19, 2, -var19 - var13, (Boolean)CheatBreaker.getInstance().globalSettings.showChatBackground.getValue() ? 50331648 : var20 + (var14 << 24));
-                        drawRect(2, -var19, 1, -var19 - var13, (Boolean)CheatBreaker.getInstance().globalSettings.showChatBackground.getValue() ? 50331648 : 13421772 + (var14 << 24));
+                        drawRect(0, -var19, 2, -var19 - var13, !(Boolean)CheatBreaker.getInstance().globalSettings.showChatBackground.getValue() ? 50331648 : var20 + (var14 << 24));
+                        drawRect(2, -var19, 1, -var19 - var13, !(Boolean)CheatBreaker.getInstance().globalSettings.showChatBackground.getValue() ? 50331648 : 13421772 + (var14 << 24));
                     }
                 }
 

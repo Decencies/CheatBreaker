@@ -74,7 +74,7 @@ public class ProfileElement
                 }
                 GL11.glTranslatef((float)(this.x + 6) - f3, (float)this.y + (float)5, 0.0f);
                 GL11.glRotatef(-90, 0.0f, 0.0f, 1.0f);
-                RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.arrowIcon, f3, (float)-1, 0.0f);
+                RenderUtil.drawIcon(this.arrowIcon, f3, (float)-1, 0.0f);
                 GL11.glPopMatrix();
                 GL11.glColor4f(0.0f, 0.0f, 0.0f, 1.0952381f * 0.3195652f);
             }
@@ -86,14 +86,14 @@ public class ProfileElement
                 }
                 GL11.glTranslatef((float)(this.x + 6) + f3, (float)this.y + (float)7, 0.0f);
                 GL11.glRotatef(90, 0.0f, 0.0f, 1.0f);
-                RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.arrowIcon, f3, 2.0f, 0.0f);
+                RenderUtil.drawIcon(this.arrowIcon, f3, 2.0f, 0.0f);
                 GL11.glPopMatrix();
             }
             if (!bl2 && !bl) {
-                RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.arrowIcon, 1.173913f * 2.1296296f, (float)(this.x + 4), (float)this.y + (float)6);
+                RenderUtil.drawIcon(this.arrowIcon, 1.173913f * 2.1296296f, (float)(this.x + 4), (float)this.y + (float)6);
             }
         } else {
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.arrowIcon, 6.6666665f * 0.375f, (float)(this.x + 4), (float)this.y + (float)6);
+            RenderUtil.drawIcon(this.arrowIcon, 6.6666665f * 0.375f, (float)(this.x + 4), (float)this.y + (float)6);
         }
         if (CheatBreaker.getInstance().activeProfile == this.profile) {
             CheatBreaker.getInstance().playBold18px.drawString(this.profile.getName().toUpperCase(), (float)this.x + (float)16, (float)(this.y + 4), -818991313);
@@ -106,10 +106,10 @@ public class ProfileElement
         if (this.profile.isEditable()) {
             bl2 = (float) mouseX > (float)(this.x + this.width - 30) * this.scale && (float) mouseX < (float)(this.x + this.width - 13) * this.scale && (float) mouseY > (float)(this.y + this.yOffset) * this.scale && (float) mouseY < (float)(this.y + this.height + this.yOffset) * this.scale;
             GL11.glColor4f(bl2 ? 0.0f : 1.1707317f * 0.21354167f, bl2 ? 0.0f : 0.101648346f * 2.4594595f, bl2 ? 0.48876402f * 1.0229886f : 0.5647059f * 0.4427083f, 0.5675676f * 1.145238f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.pencilIcon, (float)5, (float)(this.x + this.width - 26), (float)this.y + 5.1916666f * 0.6741573f);
+            RenderUtil.drawIcon(this.pencilIcon, (float)5, (float)(this.x + this.width - 26), (float)this.y + 5.1916666f * 0.6741573f);
             bl = (float) mouseX > (float)(this.x + this.width - 17) * this.scale && (float) mouseX < (float)(this.x + this.width - 2) * this.scale && (float) mouseY > (float)(this.y + this.yOffset) * this.scale && (float) mouseY < (float)(this.y + this.height + this.yOffset) * this.scale;
             GL11.glColor4f(bl ? 1.4181818f * 0.5641026f : 0.96875f * 0.2580645f, bl ? 0.0f : 0.17553192f * 1.4242424f, bl ? 0.0f : 15.250001f * 0.016393442f, 0.44444445f * 1.4625f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.deleteIcon, (float)5, (float)(this.x + this.width - 13), (float)this.y + 0.7653061f * 4.5733333f);
+            RenderUtil.drawIcon(this.deleteIcon, (float)5, (float)(this.x + this.width - 13), (float)this.y + 0.7653061f * 4.5733333f);
         }
     }
 

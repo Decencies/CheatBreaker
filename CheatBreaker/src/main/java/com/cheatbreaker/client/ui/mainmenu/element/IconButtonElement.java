@@ -48,7 +48,7 @@ public class IconButtonElement
             CheatBreaker.getInstance().robotoRegular13px.drawString(this.IllIIIIIIIlIlIllllIIllIII, this.x + this.width / 2.0f, this.y + 2.0f, -1);
         } else {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.4444444f * 0.5538462f);
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.IIIllIllIlIlllllllIlIlIII, this.lIIlIlIllIIlIIIlIIIlllIII, this.x + this.width / 2.0f - this.lIIlIlIllIIlIIIlIIIlllIII, this.y + this.height / 2.0f - this.lIIlIlIllIIlIIIlIIIlllIII);
+            RenderUtil.drawIcon(this.IIIllIllIlIlllllllIlIlIII, this.lIIlIlIllIIlIIIlIIIlllIII, this.x + this.width / 2.0f - this.lIIlIlIllIIlIIIlIIIlllIII, this.y + this.height / 2.0f - this.lIIlIlIllIIlIIIlIIIlllIII);
         }
     }
 

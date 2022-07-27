@@ -259,7 +259,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
     private boolean lastShowDebugInfo = false;
     private boolean showExtendedDebugInfo = false;
     private long lastErrorCheckTimeMs = 0L;
-
+    private float chunkLoadTimer = 0.0f;
 
     public EntityRenderer(Minecraft p_i45076_1_, IResourceManager p_i45076_2_) {
         this.shaderIndex = shaderCount;
@@ -984,7 +984,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                     var15 = 1.0F;
                 }
 
-                var16 = this.mc.gameSettings.gammaSetting;
+                var16 = this.mc.gameSettings.getGamma();
                 var17 = 1.0F - var13;
                 float var18 = 1.0F - var14;
                 float var19 = 1.0F - var15;
@@ -1301,6 +1301,12 @@ public class EntityRenderer implements IResourceManagerReloadListener {
     }
 
     public void renderWorld(float par1, long par2) {
+
+        float slowChunkLoadingValue = (int) CheatBreaker.getInstance().getGlobalSettings().slowChunkLoading.getValue();
+        if (slowChunkLoadingValue == 0.0f || !(Boolean) CheatBreaker.getInstance().getGlobalSettings().enableFpsBoost.getValue()) {
+            this.chunkLoadTimer = 0.0f;
+        }
+
         this.mc.mcProfiler.startSection("lightTex");
 
         if (this.lightmapUpdateNeeded) {
@@ -1370,15 +1376,22 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
             if (var13 == 0) {
                 this.mc.mcProfiler.endStartSection("updatechunks");
+                if (this.chunkLoadTimer == 0.0f) {
+                    while (!this.mc.renderGlobal.updateRenderers(var4, false) && par2 != 0L) {
+                        long var17 = par2 - System.nanoTime();
 
-                while (!this.mc.renderGlobal.updateRenderers(var4, false) && par2 != 0L) {
-                    long var17 = par2 - System.nanoTime();
-
-                    if (var17 < 0L || var17 > 1000000000L) {
-                        break;
+                        if (var17 < 0L || var17 > 1000000000L) {
+                            break;
+                        }
                     }
                 }
+
+                this.chunkLoadTimer += 1.0f;
+                if (this.chunkLoadTimer >= 100.0f / (100.0f - slowChunkLoadingValue * 0.995)) {
+                    this.chunkLoadTimer = 0.0f;
+                }
             }
+
 
             if (var4.posY < 128.0D) {
                 this.renderCloudsCheck(var5, par1);

@@ -2,8 +2,8 @@ package com.cheatbreaker.client.config;
 
 import com.cheatbreaker.client.CheatBreaker;
 import com.cheatbreaker.client.ui.element.type.ColorPickerColorElement;
-import com.cheatbreaker.client.util.dash.DashPlayer;
 import com.cheatbreaker.client.util.dash.DashUtil;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
@@ -20,15 +20,15 @@ public class GlobalSettings {
     public KeyBinding dragLook;
     public KeyBinding hideNames;
     public final List<Setting> settingsList = new ArrayList<>();
-    private List<String[]> networkAddressPair;
-    private List<String> dummyDomainList;
+    public List<String[]> pinnedServers;
+    public List<String> warnedServers;
     public boolean isDebug = true;
-    public String IllIIIIIIIlIlIllllIIllIII = "https://cheatbreaker.com/crash-report-upload";
-    public String lIIIIllIIlIlIllIIIlIllIlI = "https://cheatbreaker.com/debug-upload";
-    public String IlllIllIlIIIIlIIlIIllIIIl = "https://cheatbreaker.com/api/cosmetic/";
-    public String IlIlllIIIIllIllllIllIIlIl = "https://cheatbreaker.com/api/cosmetic/all";
+    public String crashReportURL = "https://cheatbreaker.com/crash-report-upload";
+    public String debugUploadURL = "https://cheatbreaker.com/debug-upload";
+    public String cosmeticApiURL = "https://cheatbreaker.com/api/cosmetic/";
+    public String cosmeticAllApiURL = "https://cheatbreaker.com/api/cosmetic/all";
     public String mojangStatusURL = "https://status.mojang.com/check";
-    public int lIIlIlIllIIlIIIlIIIlllIII = 60;
+    public int reconnectTime = 60;
     public boolean IIIlllIIIllIllIlIIIIIIlII = true;
     private Setting audioSettingsLabel;
     public Setting microphone;
@@ -60,7 +60,7 @@ public class GlobalSettings {
     public Setting clearGlass;
     public Setting redString;
     public Setting transparentBackground;
-    private Setting crosshairSettingsLabel;
+    @Getter private Setting crosshairSettingsLabel;
     public Setting customCrosshair;
     public Setting crosshairOutline;
     public Setting crosshairColor;
@@ -70,6 +70,7 @@ public class GlobalSettings {
     private Setting colorOptionsLabel;
     public Setting defaultColor;
     // what is this xd
+    // Nox: apparently, CheatBreaker code, Decencies.
     public List<ColorPickerColorElement> favouriteColors = new ArrayList<>();
     public List<ColorPickerColorElement> IlIIlIIlIllIIIIllIIllIlIl = new ArrayList<>();
 
@@ -90,7 +91,7 @@ public class GlobalSettings {
     }
 
     public GlobalSettings() {
-        String[] audioDevices = CheatBreaker.getAudioDeviceList();
+        String[] audioDevices = CheatBreaker.getInstance().getAudioDeviceList();
         this.audioSettingsLabel = (new Setting(this.settingsList, "label")).setValue("Audio Settings");
         if (audioDevices.length > 0) {
             this.microphone = (new Setting(this.settingsList, "Microphone")).setValue(audioDevices[0]).acceptedValues(audioDevices).onChange((var0) -> {
@@ -167,11 +168,11 @@ public class GlobalSettings {
         this.crosshairGap = new Setting(this.settingsList, "Gap").setValue(4.4722223F * 0.39130434F).setMinMax(0.0F, 1.0493827F * 7.147059F);
         this.colorOptionsLabel = new Setting(this.settingsList, "label").setValue("Color Options");
         this.defaultColor = new Setting(this.settingsList, "Default color").setValue(-1).setMinMax(Integer.MIN_VALUE, Integer.MAX_VALUE);
-        this.networkAddressPair = new ArrayList<>();
-        this.networkAddressPair.add(new String[]{"MineHQ Network", "minehq.com"});
-        this.networkAddressPair.add(new String[]{"VeltPvP", "veltpvp.com"});
-        this.dummyDomainList = new ArrayList<>();
-        this.dummyDomainList.add("xyz.com");
+        this.pinnedServers = new ArrayList<>();
+        this.pinnedServers.add(new String[]{"MineHQ Network", "minehq.com"});
+        this.pinnedServers.add(new String[]{"VeltPvP", "veltpvp.com"});
+        this.warnedServers = new ArrayList<>();
+        this.warnedServers.add("xyz.com");
         GameSettings var2 = Minecraft.getMinecraft().gameSettings;
         this.pushToTalk = new KeyBinding("Voice Chat", 47, "CheatBreaker Client", true);
         this.openMenu = new KeyBinding("Open Menu", 54, "CheatBreaker Client", true);
@@ -179,9 +180,5 @@ public class GlobalSettings {
         this.dragLook = new KeyBinding("Drag to look", 56, "CheatBreaker Client", true);
         this.hideNames = new KeyBinding("Hide name plates", 0, "CheatBreaker Client", true);
         var2.keyBindings = ArrayUtils.addAll(var2.keyBindings, this.pushToTalk, this.openMenu, this.openVoiceMenu, this.dragLook, this.hideNames);
-    }
-
-    public Setting IIIIllIlIIIllIlllIlllllIl() {
-        return crosshairSettingsLabel;
     }
 }

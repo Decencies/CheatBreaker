@@ -8,7 +8,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86d14131-306c-4ac7-96db-f9684937fd76" name="Default Changelist" comment="" />
+    <list default="true" id="86d14131-306c-4ac7-96db-f9684937fd76" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cheatbreaker/client/config/GlobalSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cheatbreaker/client/config/GlobalSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/client/gui/GuiIngameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/client/gui/GuiIngameMenu.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,12 +28,11 @@
       </list>
     </option>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="jar://$MAVEN_REPOSITORY$/org/lwjgl/lwjgl/lwjgl/2.9.1/lwjgl-2.9.1-sources.jar!/org/lwjgl/opengl/GL11.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="jar://$USER_HOME$/Downloads/CheatBreaker/lib/CheatBreaker.jar!/IlIlIIIIIllIlIlIIllIlIIIl.class" root0="FORCE_HIGHLIGHTING" />
-    <setting file="jar://$USER_HOME$/Downloads/CheatBreaker/lib/CheatBreaker.jar!/lIIIIIlIlIIIIIIIlIlIlllIl.class" root0="FORCE_HIGHLIGHTING" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1njluxFo9vCZj5W5kod7qoMn4ou" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="false" />
@@ -128,5 +131,16 @@
       <updated>1611911608536</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

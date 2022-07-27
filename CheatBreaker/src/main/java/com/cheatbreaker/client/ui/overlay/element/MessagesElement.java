@@ -56,7 +56,7 @@ public class MessagesElement extends DraggableElement {
     }
 
     public static String lIIIIlIIllIIlIIlIIIlIIllI(byte[] arrby) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(CheatBreaker.lIIIIIllllIIIIlIlIIIIlIlI, "AES");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(CheatBreaker.processBytesAuth, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(2, secretKeySpec);
         return new String(cipher.doFinal(arrby));
@@ -66,8 +66,8 @@ public class MessagesElement extends DraggableElement {
     public void handleElementDraw(float mouseX, float mouseY, boolean bl) {
         String[] restring;
         this.drag(mouseX, mouseY);
-        Gui.lIIIIIIIIIlIllIIllIlIIlIl(this.x, this.y, this.x + (float)23, this.y + this.height, 0.074324325f * 6.7272725f, -16777216, -14869219);
-        Gui.lIIIIIIIIIlIllIIllIlIIlIl(this.x + (float)23, this.y, this.x + this.width, this.y + this.height, 0.7132353f * 0.7010309f, -16777216, -15395563);
+        Gui.drawBoxWithOutLine(this.x, this.y, this.x + (float)23, this.y + this.height, 0.074324325f * 6.7272725f, -16777216, -14869219);
+        Gui.drawBoxWithOutLine(this.x + (float)23, this.y, this.x + this.width, this.y + this.height, 0.7132353f * 0.7010309f, -16777216, -15395563);
         GL11.glPushMatrix();
         Gui.drawRect(this.x + (float)25, this.y - 1.9285715f * 0.25925925f, this.x + this.width, this.y, -1357572843);
         Gui.drawRect(this.x + (float)25, this.y + this.height, this.x + this.width, this.y + this.height + 0.25f * 2.0f, -1357572843);
@@ -76,7 +76,7 @@ public class MessagesElement extends DraggableElement {
         CheatBreaker.getInstance().playRegular16px.drawString(this.friend.getStatusString(), this.x + (float)52, this.y + (float)11, -5460820);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         ResourceLocation resourceLocation = CheatBreaker.getInstance().getHeadLocation(EnumChatFormatting.getTextWithoutFormattingCodes(this.friend.getName()), this.friend.getPlayerId());
-        RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(resourceLocation, (float)7, this.x + (float)28, this.y + (float)4);
+        RenderUtil.drawIcon(resourceLocation, (float)7, this.x + (float)28, this.y + (float)4);
         Gui.drawRect(this.x + (float) 27, this.y + (float) 22, this.x + this.width - 2.0f, this.y + this.height - (float) 17, -1356783327);
         this.recentsScrollable.drawScrollable(mouseX, mouseY, bl);
         GL11.glPushMatrix();
@@ -92,7 +92,7 @@ public class MessagesElement extends DraggableElement {
             Gui.drawRect(this.x + (float)3, f3, this.x + (float)19, f3 + (float)16, friend.isOnline() ? Friend.getStatusColor(friend.getOnlineStatus()) : -13158601);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, bl2 ? 1.0f : 0.6016854f * 1.4126984f);
             ResourceLocation location = CheatBreaker.getInstance().getHeadLocation(EnumChatFormatting.getTextWithoutFormattingCodes(friend.getName()), friend.getPlayerId());
-            RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(location, (float)7, this.x + (float)4, this.y + (float)4 + (float)n2);
+            RenderUtil.drawIcon(location, (float)7, this.x + (float)4, this.y + (float)4 + (float)n2);
             if (bl2) {
                 float f4 = this.client.playRegular16px.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(friend.getName()));
                 RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(this.x - (float)10 - f4, f3 + 2.0f, this.x - 2.0f, f3 + (float)14, (double)6, -1895825408);

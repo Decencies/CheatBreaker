@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,6 +47,9 @@ public class ServerList
             }
 
             NBTTagList var2 = var1.getTagList("servers", 10);
+            for (String[] server : CheatBreaker.getInstance().getGlobalSettings().pinnedServers) {
+                this.servers.add(new ServerData(true, server[0], server[1]));
+            }
 
             for (int var3 = 0; var3 < var2.tagCount(); ++var3)
             {
@@ -71,6 +76,7 @@ public class ServerList
             while (var2.hasNext())
             {
                 ServerData var3 = (ServerData)var2.next();
+                if (var3.continueOnSave) continue;
                 var1.appendTag(var3.getNBTCompound());
             }
 
@@ -122,9 +128,13 @@ public class ServerList
     public void swapServers(int p_78857_1_, int p_78857_2_)
     {
         ServerData var3 = this.getServerData(p_78857_1_);
-        this.servers.set(p_78857_1_, this.getServerData(p_78857_2_));
-        this.servers.set(p_78857_2_, var3);
-        this.saveServerList();
+        ServerData var4 = this.getServerData(p_78857_2_);
+
+        if (!var3.continueOnSave && !var4.continueOnSave) {
+            this.servers.set(p_78857_1_, var4);
+            this.servers.set(p_78857_2_, var3);
+            this.saveServerList();
+        }
     }
 
     public void func_147413_a(int p_147413_1_, ServerData p_147413_2_)

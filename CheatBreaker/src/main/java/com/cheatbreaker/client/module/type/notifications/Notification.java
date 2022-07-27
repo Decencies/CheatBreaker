@@ -62,13 +62,13 @@ class Notification {
         switch (this.type) {
             case ERROR: {
                 GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(new ResourceLocation("client/icons/error-64.png"), (float)6, (float)(n - 10 - n3 + 9), (float)(n2 + 4));
+                RenderUtil.drawIcon(new ResourceLocation("client/icons/error-64.png"), (float)6, (float)(n - 10 - n3 + 9), (float)(n2 + 4));
                 Gui.drawRect((float)(n - 10) - f - 7.8428574f * 0.57377046f, n2 + 4, (float)(n - 10) - f - (float)4, n2 + this.IIIllIllIlIlllllllIlIlIII - 4, -1342177281);
                 break;
             }
             case INFO: {
                 GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.7955224f * 0.81707317f);
-                RenderUtil.lIIIIlIIllIIlIIlIIIlIIllI(new ResourceLocation("client/icons/info-64.png"), (float)6, (float)(n - 10 - n3 + 9), (float)(n2 + 4));
+                RenderUtil.drawIcon(new ResourceLocation("client/icons/info-64.png"), (float)6, (float)(n - 10 - n3 + 9), (float)(n2 + 4));
                 Gui.drawRect((float)(n - 10) - f - 11.142858f * 0.40384614f, n2 + 4, (float)(n - 10) - f - (float)4, n2 + this.IIIllIllIlIlllllllIlIlIII - 4, -1342177281);
             }
         }

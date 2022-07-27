@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer;
 
+import com.cheatbreaker.client.CheatBreaker;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -112,7 +113,7 @@ public class ItemRenderer
             GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
             renderItemIn2D(var8, var10, var11, var9, var12, var7.getIconWidth(), var7.getIconHeight(), 0.0625F);
 
-            if (p_78443_2_.hasEffect() && p_78443_3_ == 0)
+            if (p_78443_2_.hasEffect() && p_78443_3_ == 0 && (boolean) CheatBreaker.getInstance().getGlobalSettings().enchantmentGlint.getValue())
             {
                 GL11.glDepthFunc(GL11.GL_EQUAL);
                 GL11.glDisable(GL11.GL_LIGHTING);
