@@ -20,8 +20,8 @@ public class GlobalSettings {
     public KeyBinding dragLook;
     public KeyBinding hideNames;
     public final List<Setting> settingsList = new ArrayList<>();
-    private List<String[]> networkAddressPair;
-    private List<String> dummyDomainList;
+    private List<String[]> pinnedServers;
+    private List<String> warnedServers;
     public boolean isDebug = true;
     public String crashReportURL = "https://cheatbreaker.com/crash-report-upload";
     public String debugUploadURL = "https://cheatbreaker.com/debug-upload";
@@ -168,11 +168,11 @@ public class GlobalSettings {
         this.crosshairGap = new Setting(this.settingsList, "Gap").setValue(4.4722223F * 0.39130434F).setMinMax(0.0F, 1.0493827F * 7.147059F);
         this.colorOptionsLabel = new Setting(this.settingsList, "label").setValue("Color Options");
         this.defaultColor = new Setting(this.settingsList, "Default color").setValue(-1).setMinMax(Integer.MIN_VALUE, Integer.MAX_VALUE);
-        this.networkAddressPair = new ArrayList<>();
-        this.networkAddressPair.add(new String[]{"MineHQ Network", "minehq.com"});
-        this.networkAddressPair.add(new String[]{"VeltPvP", "veltpvp.com"});
-        this.dummyDomainList = new ArrayList<>();
-        this.dummyDomainList.add("xyz.com");
+        this.pinnedServers = new ArrayList<>();
+        this.pinnedServers.add(new String[]{"MineHQ Network", "minehq.com"});
+        this.pinnedServers.add(new String[]{"VeltPvP", "veltpvp.com"});
+        this.warnedServers = new ArrayList<>();
+        this.warnedServers.add("xyz.com");
         GameSettings var2 = Minecraft.getMinecraft().gameSettings;
         this.pushToTalk = new KeyBinding("Voice Chat", 47, "CheatBreaker Client", true);
         this.openMenu = new KeyBinding("Open Menu", 54, "CheatBreaker Client", true);
