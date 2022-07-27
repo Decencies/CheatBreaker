@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleManager {
-    
+
     public List<AbstractModule> modules;
     public List<AbstractModule> staffModules;
     public AbstractModule llIIlllIIIIlllIllIlIlllIl;
