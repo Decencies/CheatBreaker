@@ -57,6 +57,8 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.awt.*;
+
 public class RenderBlocks
 {
     /** The IBlockAccess used by this instance of RenderBlocks */
@@ -2154,8 +2156,13 @@ public class RenderBlocks
             var6 = this.overrideBlockTexture;
         }
 
-        var5.setBrightness(p_147756_1_.getBlockBrightness(this.blockAccess, p_147756_2_, p_147756_3_, p_147756_4_));
-        var5.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+        if ((Boolean) CheatBreaker.getInstance().getGlobalSettings().redString.getValue()) {
+            var5.setColorRGBA_F(Color.RED.getRed(), Color.RED.getGreen(), Color.RED.getBlue(), 255F);
+        } else {
+            var5.setBrightness(p_147756_1_.getBlockBrightness(this.blockAccess, p_147756_2_, p_147756_3_, p_147756_4_));
+            var5.setColorOpaque_F(1.0f, 1.0f, 1.0f);
+        }
+
         double var10 = (double)var6.getMinU();
         double var12 = (double)var6.getInterpolatedV(var8 ? 2.0D : 0.0D);
         double var14 = (double)var6.getMaxU();
