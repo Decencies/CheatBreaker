@@ -4,6 +4,7 @@ import com.cheatbreaker.client.config.Setting;
 import com.cheatbreaker.client.event.type.GuiDrawEvent;
 import com.cheatbreaker.client.module.AbstractModule;
 import com.cheatbreaker.client.ui.module.CBGuiAnchor;
+import net.minecraft.MinecraftMovementInputHelper;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.opengl.GL11;
 
@@ -30,7 +31,7 @@ public class ToggleSprintModule extends AbstractModule {
     public Setting sprintToggledString;
     public Setting sneakToggledString;
 
-    public static boolean lIIIIIllllIIIIlIlIIIIlIlI;
+    public static boolean buggedSprint;
 
     public ToggleSprintModule() {
         super("ToggleSprint");
@@ -68,10 +69,10 @@ public class ToggleSprintModule extends AbstractModule {
         }
         if ((Boolean) showHudText.getValue() && ((Boolean) showWhileTyping.getValue() || !(this.minecraft.currentScreen instanceof GuiChat))) {
             GL11.glPushMatrix();
-            int n = this.minecraft.fontRenderer.getStringWidth(ToggleSprintHandler.text);
+            int n = this.minecraft.fontRenderer.getStringWidth(MinecraftMovementInputHelper.toggleSprintString);
             this.setDimensions(n, 18);
             this.scaleAndTranslate(guiDrawEvent.getResolution());
-            this.minecraft.fontRenderer.drawStringWithShadow(ToggleSprintHandler.text, 0.0f, 0.0f, this.textColor.getColorValue());
+            this.minecraft.fontRenderer.drawStringWithShadow(MinecraftMovementInputHelper.toggleSprintString, 0.0f, 0.0f, this.textColor.getColorValue());
             GL11.glPopMatrix();
         } else {
             this.setDimensions(50, 18);
@@ -79,7 +80,7 @@ public class ToggleSprintModule extends AbstractModule {
     }
 
     static {
-        lIIIIIllllIIIIlIlIIIIlIlI = false;
+        buggedSprint = false;
     }
     
 }

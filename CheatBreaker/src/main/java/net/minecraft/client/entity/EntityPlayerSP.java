@@ -1,5 +1,7 @@
 package net.minecraft.client.entity;
 
+import com.cheatbreaker.client.CheatBreaker;
+import com.cheatbreaker.client.module.type.togglesprint.ToggleSprintModule;
 import net.minecraft.MinecraftMovementInputHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -40,14 +42,7 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MouseFilter;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Session;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 public class EntityPlayerSP extends AbstractClientPlayer
@@ -186,9 +181,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
 
             boolean var1 = this.movementInput.jump;
-            float var2 = 0.8F;
-            boolean var3 = this.movementInput.moveForward >= var2;
-            this.movementInput.updatePlayerMoveState();
+            float f = 0.8F;
+            boolean bl2 = this.movementInput.moveForward >= f;
+            MinecraftMovementInputHelper.lIIIIlIIllIIlIIlIIIlIIllI(this.mc, (MovementInputFromOptions)this.movementInput, this);
 
             if (this.isUsingItem() && !this.isRiding())
             {
@@ -206,28 +201,62 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.func_145771_j(this.posX - (double)this.width * 0.35D, this.boundingBox.minY + 0.5D, this.posZ - (double)this.width * 0.35D);
             this.func_145771_j(this.posX + (double)this.width * 0.35D, this.boundingBox.minY + 0.5D, this.posZ - (double)this.width * 0.35D);
             this.func_145771_j(this.posX + (double)this.width * 0.35D, this.boundingBox.minY + 0.5D, this.posZ + (double)this.width * 0.35D);
-            boolean var4 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
+            boolean bl3 = (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
+            boolean bl4 = !CheatBreaker.getInstance().getModuleManager().toggleSprint.isEnabled() || !((Boolean) ToggleSprintModule.toggleSprint.getValue());
+            boolean bl5 = (Boolean) ToggleSprintModule.doubleTap.getValue();
 
-            if (this.onGround && !var3 && this.movementInput.moveForward >= var2 && !this.isSprinting() && var4 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness))
-            {
-                if (this.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.getIsKeyPressed())
-                {
-                    this.sprintToggleTimer = 7;
-                }
-                else
-                {
-                    this.setSprinting(true);
-                }
-            }
-
-            if (!this.isSprinting() && this.movementInput.moveForward >= var2 && var4 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && this.mc.gameSettings.keyBindSprint.getIsKeyPressed())
-            {
-                this.setSprinting(true);
-            }
-
-            if (this.isSprinting() && (this.movementInput.moveForward < var2 || this.isCollidedHorizontally || !var4))
-            {
+            if (ToggleSprintModule.buggedSprint) {
                 this.setSprinting(false);
+                this.minecraftMovementInputHelper.setSprintState(false, false);
+                ToggleSprintModule.buggedSprint = false;
+            }
+
+            if (bl4) {
+                if ((Boolean) ToggleSprintModule.doubleTap.getValue() && this.onGround
+                        && !bl2 && this.movementInput.moveForward >= f && !this.isSprinting()
+                        && bl3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness)) {
+                    if (this.sprintToggleTimer <= 0 && !this.mc.gameSettings.keyBindSprint.getIsKeyPressed()) {
+                        this.sprintToggleTimer = 7;
+                    } else {
+                        this.setSprinting(true);
+                        this.minecraftMovementInputHelper.setSprintState(true, false);
+                    }
+                }
+                if (!this.isSprinting() && this.movementInput.moveForward >= f && bl3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && this.mc.gameSettings.keyBindSprint.getIsKeyPressed()) {
+                    this.setSprinting(true);
+                    this.minecraftMovementInputHelper.setSprintState(true, false);
+                }
+            } else {
+                boolean bl6 = MinecraftMovementInputHelper.isSprinting;
+                if (!(!bl3 || this.isUsingItem() || this.isPotionActive(Potion.blindness) || MinecraftMovementInputHelper.superSusBoolean || bl5 && this.isSprinting())) {
+                    this.setSprinting(bl6);
+                }
+                if (bl5 && !bl6 && this.onGround && !bl2 && this.movementInput.moveForward >= f && !this.isSprinting() && bl3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness)) {
+                    if (this.sprintToggleTimer == 0) {
+                        this.sprintToggleTimer = 7;
+                    } else {
+                        this.setSprinting(true);
+                        this.minecraftMovementInputHelper.setSprintState(true, true);
+                        this.sprintToggleTimer = 0;
+                    }
+                }
+            }
+            if (this.isSprinting() && (this.movementInput.moveForward < f || this.isCollidedHorizontally || !bl3)) {
+                this.setSprinting(false);
+                if (MinecraftMovementInputHelper.superSusBoolean || bl4 || MinecraftMovementInputHelper.aSusBoolean || this.isRiding()) {
+                    this.minecraftMovementInputHelper.setSprintState(false, false);
+                }
+            }
+            if ((Boolean) ToggleSprintModule.flyBoost.getValue() && this.capabilities.isFlying && this.mc.gameSettings.keyBindSprint.getIsKeyPressed() && this.capabilities.isCreativeMode) {
+                this.capabilities.setFlySpeed(0.027272727f * 1.8333334f * (Float) ToggleSprintModule.flyBoostAmount.getValue());
+                if (this.movementInput.sneak) {
+                    this.motionY -= 0.6526315808296204 * 0.2298387090145425 * (double) (Float) ToggleSprintModule.flyBoostAmount.getValue();
+                }
+                if (this.movementInput.jump) {
+                    this.motionY += 0.01084337374315776 * 13.833333015441895 * (double) (Float) ToggleSprintModule.flyBoostAmount.getValue();
+                }
+            } else if (this.capabilities.getFlySpeed() != 0.0129629625f * 3.857143f) {
+                this.capabilities.setFlySpeed(4.714286f * 0.010606061f);
             }
 
             if (this.capabilities.allowFlying && !var1 && this.movementInput.jump)
