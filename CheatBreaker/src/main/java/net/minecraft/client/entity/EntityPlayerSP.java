@@ -248,15 +248,15 @@ public class EntityPlayerSP extends AbstractClientPlayer
                 }
             }
             if ((Boolean) ToggleSprintModule.flyBoost.getValue() && this.capabilities.isFlying && this.mc.gameSettings.keyBindSprint.getIsKeyPressed() && this.capabilities.isCreativeMode) {
-                this.capabilities.setFlySpeed(0.027272727f * 1.8333334f * (Float) ToggleSprintModule.flyBoostAmount.getValue());
+                this.capabilities.setFlySpeed(0.05f * Float.valueOf((Integer)ToggleSprintModule.flyBoostAmount.getValue()));
                 if (this.movementInput.sneak) {
-                    this.motionY -= 0.6526315808296204 * 0.2298387090145425 * (double) (Float) ToggleSprintModule.flyBoostAmount.getValue();
+                    this.motionY -= 0.15 * (double) ToggleSprintModule.flyBoostAmount.getValue();
                 }
                 if (this.movementInput.jump) {
-                    this.motionY += 0.01084337374315776 * 13.833333015441895 * (double) (Float) ToggleSprintModule.flyBoostAmount.getValue();
+                    this.motionY += 0.15 * (double) ToggleSprintModule.flyBoostAmount.getValue();
                 }
-            } else if (this.capabilities.getFlySpeed() != 0.0129629625f * 3.857143f) {
-                this.capabilities.setFlySpeed(4.714286f * 0.010606061f);
+            } else if (this.capabilities.getFlySpeed() != 0.05f) {
+                this.capabilities.setFlySpeed(0.05f);
             }
 
             if (this.capabilities.allowFlying && !var1 && this.movementInput.jump)
