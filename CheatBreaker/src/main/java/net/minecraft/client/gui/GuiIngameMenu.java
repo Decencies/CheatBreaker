@@ -107,26 +107,22 @@ public class GuiIngameMenu extends GuiScreen
             case 3:
             default:
                 break;
-
             case 4:
                 this.mc.displayGuiScreen(null);
                 this.mc.setIngameFocus();
                 break;
-
             case 5:
                 this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.func_146107_m()));
                 break;
-
             case 6:
                 this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.func_146107_m()));
                 break;
-
             case 7:
                 this.mc.displayGuiScreen(new GuiShareToLan(this));
-
+                break;
             case 10:
                 this.mc.displayGuiScreen(new CBModulesGui());
-
+                break;
             case 16:
                 this.mc.displayGuiScreen(new GuiMultiplayer(this));
                 break;
