@@ -250,10 +250,10 @@ public class EntityPlayerSP extends AbstractClientPlayer
             if ((Boolean) ToggleSprintModule.flyBoost.getValue() && this.capabilities.isFlying && this.mc.gameSettings.keyBindSprint.getIsKeyPressed() && this.capabilities.isCreativeMode) {
                 this.capabilities.setFlySpeed(0.05f * Float.valueOf((Integer)ToggleSprintModule.flyBoostAmount.getValue()));
                 if (this.movementInput.sneak) {
-                    this.motionY -= 0.15 * (double) ToggleSprintModule.flyBoostAmount.getValue();
+                    this.motionY -= 0.15 * ((Integer) ToggleSprintModule.flyBoostAmount.getValue()).doubleValue();
                 }
                 if (this.movementInput.jump) {
-                    this.motionY += 0.15 * (double) ToggleSprintModule.flyBoostAmount.getValue();
+                    this.motionY += 0.15 * ((Integer) ToggleSprintModule.flyBoostAmount.getValue()).doubleValue();
                 }
             } else if (this.capabilities.getFlySpeed() != 0.05f) {
                 this.capabilities.setFlySpeed(0.05f);
